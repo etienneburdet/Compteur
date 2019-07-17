@@ -33,7 +33,7 @@
           <div class="col-md d-none d-md-block">
             <table class="table">
               <tbody class="placeholder">
-                <tr v-for="count in count">
+                <tr v-for="count in counts">
                   <td > {{ count.place }}</td>
                   <td> {{ count.up }} </td>
                   <td> {{ count.down }}</td>
@@ -56,12 +56,10 @@
                   <!-- form-->
                   <div class="container form-group p-2">
                     <form class="add-item">
-                      <input type="hidden" name="countUp" id="input-countup" value="0">
-                      <input type="hidden" name="countDown" id="input-countdown" value="0">
                       <div class="input-group">
-                        <input type="text" class="form-control" name="note" id="input-note" required autofocus placeholder="Name" aria-label="Record name" aria-describedby="submit-button">
+                        <input type="text" class="form-control" v-model="place" required autofocus placeholder="Name" aria-label="Record name" aria-describedby="submit-button">
                         <div class="input-group-append">
-                          <button type="submit" class="btn btn-outline-secondary" id="submit-button">Save</button>
+                          <button @click="newCount" class="btn btn-outline-secondary" id="submit-button">Save</button>
                         </div>
                       </div>
                     </form>
@@ -77,19 +75,19 @@
                   <div class="container-fluid d-md-none">
                     <div class="row">
                       <div class="col">
-                        <h1 class="display-1 text-center" id="disp-countup">0</h1>
+                        <h1 class="display-1 text-center" id="disp-countup"> {{ counterUp }} </h1>
                       </div>
                       <div class="col">
-                        <h1 class="display-1 text-center" id="disp-countdown">0</h1>
+                        <h1 class="display-1 text-center" id="disp-countdown"> {{ counterDown }} </h1>
                       </div>
                       <div class="w-100"></div>
                       <div class="col p-0 mb-0">
-                        <button  class="btn btn-outline-dark btn-block rounded-0" onClick="onClickUp()">
+                        <button  class="btn btn-outline-dark btn-block rounded-0" @click="counterUp +=1">
                           <h1 class="display-5">&uarr;</h1>
                         </button>
                       </div>
                       <div class="col p-0 mb-0">
-                        <button  class="btn btn-outline-dark btn-block rounded-0" onClick="onClickDown()">
+                        <button  class="btn btn-outline-dark btn-block rounded-0" @click="counterDown +=1">
                           <h1 class="display-5">&darr;</h1>
                         </button>
                       </div>
@@ -113,7 +111,7 @@
                   <div class="card-body items col-md-6 col-lg-4">
                     <table class="table">
                       <tbody class="placeholder">
-                        <tr v-for="count in count">
+                        <tr v-for="count in counts">
                           <td > {{ count.place }}</td>
                           <td> {{ count.up }} </td>
                           <td> {{ count.down }}</td>
