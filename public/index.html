@@ -28,9 +28,9 @@
 
     <main>
       <div id="app">
-      <div class="container">
-        <div class="row">
-          <div class="col-md d-none d-md-block">
+      <div class="container-fluid p-0">
+        <div class="row justify-content-md-center">
+          <div class="col-md-6 col-lg-4 d-none d-md-block">
             <table class="table">
               <tbody class="placeholder">
                 <tr v-for="count in counts">
@@ -43,7 +43,7 @@
               </tbody>
             </table>
           </div>
-          <div class="col-md">
+          <div class="col-md-3">
             <!-- collapse form + counter -->
             <div class="card mb-0">
               <div class="card-header" id="headingCounter">
@@ -72,27 +72,30 @@
                   </div>
 
                   <!-- Counter -->
-                  <div class="container-fluid d-md-none">
-                    <div class="row">
+
+                    <div class="row no-gutters input-group input-group-lg">
                       <div class="col">
-                        <h1 class="display-1 text-center" id="disp-countup"> {{ counterUp }} </h1>
+                        <h1 class="display-1 text-center d-md-none" id="disp-countup"> {{ counterUp }} </h1>
+                        <input type="text" v-model="counterUp" placeholder="0" class="form-control d-none d-md-inline" id="disp-countup"></h1>
                       </div>
                       <div class="col">
-                        <h1 class="display-1 text-center" id="disp-countdown"> {{ counterDown }} </h1>
+                        <h1 class="display-1 text-center d-md-none" id="disp-countdown"> {{ counterDown }} </h1>
+                        <input type="text" v-model="counterDown" placeholder="0" class="form-control d-none d-md-inline" id="disp-countup"></h1>
                       </div>
                       <div class="w-100"></div>
-                      <div class="col p-0 mb-0">
+                      <div class="col d-md-none">
                         <button  class="btn btn-outline-dark btn-block rounded-0" @click="counterUp +=1">
                           <h1 class="display-5">&uarr;</h1>
                         </button>
                       </div>
-                      <div class="col p-0 mb-0">
+                      <div class="col d-md-none">
                         <button  class="btn btn-outline-dark btn-block rounded-0" @click="counterDown +=1">
                           <h1 class="display-5">&darr;</h1>
                         </button>
                       </div>
                     </div>
-                  </div>
+
+
                 </div>
               </div>
             </div>
@@ -106,32 +109,27 @@
                 </a>
               </div>
               <div class="collapse" id="collapseSwitch">
-                <div class="row justifiy-content-center">
-                  <div class="col-md-3"></div>
-                  <div class="card-body items col-md-6 col-lg-4">
-                    <table class="table">
-                      <tbody class="placeholder">
-                        <tr v-for="count in counts">
-                          <td > {{ count.place }}</td>
-                          <td> {{ count.up }} </td>
-                          <td> {{ count.down }}</td>
-                          <td><a class="edit" href="#"><i class="fas fa-edit"></i></a></td>
-                          <td><a href="#"><i class="fas fa-trash-alt"></i></a></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div>
-                      <button class="btn btn-outline-warning float-right" id="clear-items">Reset</button>
-                    </div>
+                <div class="card-body items col-md-6 col-lg-4 justify-content-center">
+                  <table class="table">
+                    <tbody class="placeholder">
+                      <tr v-for="count in counts">
+                        <td > {{ count.place }}</td>
+                        <td> {{ count.up }} </td>
+                        <td> {{ count.down }}</td>
+                        <td><a class="edit" href="#"><i class="fas fa-edit"></i></a></td>
+                        <td><a href="#"><i class="fas fa-trash-alt"></i></a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div>
+                    <button class="btn btn-outline-warning float-right" id="clear-items">Reset</button>
                   </div>
-                  <div class="col-md-3"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
     </main>
 
