@@ -44,7 +44,7 @@
                   <td> {{ count.up }} </td>
                   <td> {{ count.down }}</td>
                   <td><a class="edit" href="#"><i class="fas fa-edit"></i></a></td>
-                  <td><a href="#"><i class="fas fa-trash-alt"></i></a></td>
+                  <td><button class="btn" @click="deleteCount(count)"><i class="fas fa-trash-alt"></i></button></td>
                 </tr>
               </tbody>
             </table>
@@ -123,7 +123,7 @@
                         <td> {{ count.up }} </td>
                         <td> {{ count.down }}</td>
                         <td><a class="edit" href="#"><i class="fas fa-edit"></i></a></td>
-                        <td><a href="#"><i class="fas fa-trash-alt"></i></a></td>
+                        <td><button class="btn" @click="deleteCount(count)"><i class="fas fa-trash-alt"></i></button></td>
                       </tr>
                     </tbody>
                   </table>

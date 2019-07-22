@@ -24,14 +24,12 @@ const presetCounts = [
 
 db.bulkDocs(presetCounts);
 
-function fetchAndRenderAllDocs() {
+function fetchAllDocs() {
   return db.allDocs({include_docs: true}).then(function (res) {
     const docs = res.rows.map(function (row) { return row.doc; });
     app.counts = docs;
   }).catch(console.log.bind(console));
 }
-
-fetchAndRenderAllDocs();
 
 var app = new Vue({
   el: '#app',
@@ -41,19 +39,27 @@ var app = new Vue({
     counterDown: 0,
     place: ''
   },
+  mounted: function () {
+    fetchAllDocs();
+  },
   methods: {
     newCount: function(event) {
       const count = {
+        _id: new Date().toISOString(),
         place: this.place,
         up: this.counterUp,
         down: this.counterDown
       }
-
-      presetCounts.push(count);
+      db.put(count);
+      fetchAllDocs();
 
       this.place = '';
       this.counterUp = 0;
       this.counterDown = 0;
+    },
+    deleteCount: function(count) {
+      db.remove(count);
+      fetchAllDocs();
     }
   }
 })
