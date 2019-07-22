@@ -1,5 +1,6 @@
 
 const db = new PouchDB('comptages');
+const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
 const presetCounts = [
   {
@@ -21,6 +22,15 @@ const presetCounts = [
     down: 5
   }
 ]
+
+db.sync(cloudantDB,{
+  live: true,
+  retry:true
+}).on('complete', function() {
+  console.log('sync!');
+}).on('error', function (err) {
+  console.log(err);
+});
 
 db.bulkDocs(presetCounts);
 
