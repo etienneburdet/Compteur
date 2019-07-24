@@ -2,6 +2,7 @@
 const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
+// test data ------------
 const presetCounts = [
   {
     _id: "1",
@@ -23,6 +24,11 @@ const presetCounts = [
   }
 ]
 
+
+db.bulkDocs(presetCounts);
+// -----------------------
+
+// DB function def to be used in app + initialize DB syncing
 db.sync(cloudantDB,{
   live: true,
   retry:true
@@ -32,8 +38,6 @@ db.sync(cloudantDB,{
   console.log(err);
 });
 
-db.bulkDocs(presetCounts);
-
 function fetchAllDocs() {
   return db.allDocs({include_docs: true}).then(function (res) {
     const docs = res.rows.map(function (row) { return row.doc; });
@@ -41,7 +45,19 @@ function fetchAllDocs() {
   }).catch(console.log.bind(console));
 }
 
-var app = new Vue({
+// Routes and router definition
+const Login = {template: '<p> Salut Etienne </p>'}
+
+const routes = [
+  { path: '/login', component: Login}
+]
+
+const router = new VueRouter({
+  routes
+})
+
+
+const app = new Vue({
   el: '#app',
   data: {
     counts: '',
@@ -70,6 +86,10 @@ var app = new Vue({
     deleteCount: function(count) {
       db.remove(count);
       fetchAllDocs();
+    },
+    fireAuth: function(event) {
+      login();
     }
-  }
+  },
+  router
 })
