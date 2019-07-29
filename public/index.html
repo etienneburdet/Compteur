@@ -10,6 +10,8 @@
 		<link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel="stylesheet" href="assets/app.css">
+    <link rel="manifest" href="/manifest.json">
+
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
@@ -26,17 +28,11 @@
       <header>
           <nav class="navbar sticky-top shadow-sm pb-2 navbar-light bg-light">
             <a class="navbar-brand" href="index.html"> Counter </a>
-            <a class="nav-link" href="">
-              <router-link to="/login">Login/Sign up</router-link>
-            </a>
+            <a class="nav-link">Login/Sign up</a>
           </nav>
       </header>
 
       <main>
-        <button class="btn" @click="fireAuth()">Test login</button>
-        <router-link to="/login">Login/Sign up</router-link>
-        <router-link to="/">Retour maison</router-link>
-        <router-view></router-view>
 
         <div class="container-fluid p-0">
           <div class="row justify-content-md-center">

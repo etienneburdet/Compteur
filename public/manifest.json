@@ -1,0 +1,21 @@
+{
+  "name": "offline-first-counter",
+  "short_name": "offline-first-counter",
+  "description": "An app to count people",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "red",
+  "icons": [
+    {
+      "src": "/assets/compteur.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/compteur-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+
+  ]
+}
