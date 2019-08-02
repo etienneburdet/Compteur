@@ -1,7 +1,7 @@
 const db = new PouchDB('comptages', {adapter: 'worker'});
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
-// test data ------------
+// Put test data in db
 const presetCounts = [
   {
     _id: "1",
@@ -44,6 +44,24 @@ function fetchAllDocs() {
   }).catch(console.log.bind(console));
 }
 
+// Initialize auth0 functions to be called by the instance
+
+async function configureClient () {
+
+  const query = window.location.search;
+  if (query.includes("code=") && query.includes("state=")) {
+    await auth0.handleRedirectCallback();
+    this.isAuthenticated = await auth0.isAuthenticated();
+     window.history.replaceState({}, document.title, "/");
+  } else {
+    auth0 = await createAuth0Client({
+      domain: "dev-23dd-ysw.eu.auth0.com",
+      client_id: "A0nQItIFshhJOBKOTHI36dDcMAF16WzZ"
+    });
+  }
+
+}
+
 
 const app = new Vue({
   el: '#app',
@@ -51,12 +69,15 @@ const app = new Vue({
     counts: '',
     counterUp: 0,
     counterDown: 0,
-    place: ''
+    place: '',
+    isAuthenticated: false
   },
   mounted: function () {
     fetchAllDocs();
+    configureClient();
   },
   methods: {
+
     newCount: function(event) {
       const count = {
         _id: new Date().toISOString(),
@@ -71,12 +92,17 @@ const app = new Vue({
       this.counterUp = 0;
       this.counterDown = 0;
     },
+
     deleteCount: function(count) {
       db.remove(count);
       fetchAllDocs();
     },
-    fireAuth: function(event) {
-      login();
+
+    login: async function(event) {
+      auth0.loginWithRedirect({
+        redirect_uri: window.location.origin
+      });
     }
-  },
+
+  }
 })
