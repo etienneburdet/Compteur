@@ -104,8 +104,8 @@ const app = new Vue({
         await auth0.handleRedirectCallback();
         window.history.replaceState({}, document.title, "/");
       }
-    this.updateLogState();
-  },
+      this.updateLogState();
+    },
 
     updateLogState: async function() {
       this.isAuthenticated = await auth0.isAuthenticated();
