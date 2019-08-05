@@ -44,25 +44,6 @@ function fetchAllDocs() {
   }).catch(console.log.bind(console));
 }
 
-// Initialize auth0 functions to be called by the instance
-
-async function configureClient () {
-
-  const query = window.location.search;
-  if (query.includes("code=") && query.includes("state=")) {
-    await auth0.handleRedirectCallback();
-    this.isAuthenticated = await auth0.isAuthenticated();
-     window.history.replaceState({}, document.title, "/");
-  } else {
-    auth0 = await createAuth0Client({
-      domain: "dev-23dd-ysw.eu.auth0.com",
-      client_id: "A0nQItIFshhJOBKOTHI36dDcMAF16WzZ"
-    });
-  }
-
-}
-
-
 const app = new Vue({
   el: '#app',
   data: {
@@ -70,11 +51,10 @@ const app = new Vue({
     counterUp: 0,
     counterDown: 0,
     place: '',
-    isAuthenticated: false
-  },
-  mounted: function () {
-    fetchAllDocs();
-    configureClient();
+    isAuthenticated: false,
+    token: null,
+    user: null
+
   },
   methods: {
 
@@ -98,11 +78,44 @@ const app = new Vue({
       fetchAllDocs();
     },
 
-    login: async function(event) {
-      auth0.loginWithRedirect({
-        redirect_uri: window.location.origin
+    configureClient: async function() {
+      auth0 = await createAuth0Client({
+        domain: "dev-23dd-ysw.eu.auth0.com",
+        client_id: "A0nQItIFshhJOBKOTHI36dDcMAF16WzZ"
+      })
+    },
+    login: async function() {
+      await auth0.loginWithRedirect({
+        redirect_uri: window.location.origin
       });
-    }
+    },
 
-  }
-})
+    logout: async function() {
+      await auth0.logout({
+        returnTo: window.location.origin
+      });
+    },
+
+    handleLogin: async function() {
+      const isAuthenticated = await auth0.isAuthenticated();
+
+      const query = window.location.search;
+      if (query.includes("code=") && query.includes("state")) {
+        await auth0.handleRedirectCallback();
+        window.history.replaceState({}, document.title, "/");
+      }
+    this.updateLogState();
+  },
+
+    updateLogState: async function() {
+      this.isAuthenticated = await auth0.isAuthenticated();
+      this.token = await auth0.getTokenSilently();
+      this.user = await auth0.getUser();
+    }
+  },
+  created: async function() {
+    await this.configureClient();
+    this.handleLogin();
+    fetchAllDocs();
+  },
+});

@@ -33,15 +33,21 @@
     <div id="app">
       <header>
           <nav class="navbar sticky-top shadow-sm pb-2 navbar-light bg-light">
-            <a class="navbar-brand" href="index.html"> Counter </a>
-            <button class="btn" @click="login">Login/Sign up</button>
+            <a class="navbar-brand mr-auto" href="index.html"> Counter </a>
+            <button v-if="!isAuthenticated" type ="button" class="btn btn-primary" @click="login">Login/Sign up</button>
+            <button v-if="isAuthenticated" type ="button" class="btn btn-primary" @click="logout">Logout</button>
+            <img
+            v-if="isAuthenticated"
+            :src="user.picture"
+            class="rounded-circle"
+            width="70"
+            />
           </nav>
       </header>
 
       <main>
 
         <div class="container-fluid p-0">
-          <p v-if="isAuthenticated">Salut !</p>
           <div class="row justify-content-md-center">
             <div class="col-md-6 col-lg-4 d-none d-md-block">
               <table class="table">
@@ -50,7 +56,6 @@
                     <td > {{ count.place }}</td>
                     <td> {{ count.up }} </td>
                     <td> {{ count.down }}</td>
-                    <td><a class="edit" href="#"><i class="fas fa-edit"></i></a></td>
                     <td><button class="btn" @click="deleteCount(count)"><i class="fas fa-trash-alt"></i></button></td>
                   </tr>
                 </tbody>
