@@ -1,11 +1,17 @@
-
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('../lib/serviceworker.js');
+  navigator.serviceWorker.register('../service-worker.js').then(function (registration)
+        {
+          console.log('Service worker registered successfully');
+        }).catch(function (e)
+        {
+          console.error('Error during service worker registration:', e);
+        });
 }
 
 const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
+// Put test data in db
 const presetCounts = [
   {
     _id: "1",
@@ -27,6 +33,11 @@ const presetCounts = [
   }
 ]
 
+
+db.bulkDocs(presetCounts);
+// -----------------------
+
+// DB function def to be used in app + initialize DB syncing
 db.sync(cloudantDB,{
   live: true,
   retry:true
@@ -36,8 +47,6 @@ db.sync(cloudantDB,{
   console.log(err);
 });
 
-db.bulkDocs(presetCounts);
-
 function fetchAllDocs() {
   return db.allDocs({include_docs: true}).then(function (res) {
     const docs = res.rows.map(function (row) { return row.doc; });
@@ -45,18 +54,20 @@ function fetchAllDocs() {
   }).catch(console.log.bind(console));
 }
 
-var app = new Vue({
+const app = new Vue({
   el: '#app',
   data: {
     counts: '',
     counterUp: 0,
     counterDown: 0,
-    place: ''
-  },
-  mounted: function () {
-    fetchAllDocs();
+    place: '',
+    isAuthenticated: false,
+    token: null,
+    user: null
+
   },
   methods: {
+
     newCount: function(event) {
       const count = {
         _id: new Date().toISOString(),
@@ -66,15 +77,55 @@ var app = new Vue({
       }
       db.put(count);
       fetchAllDocs();
-      fetchAllDocs();
 
       this.place = '';
       this.counterUp = 0;
       this.counterDown = 0;
     },
+
     deleteCount: function(count) {
       db.remove(count);
       fetchAllDocs();
+    },
+
+    configureClient: async function() {
+      auth0 = await createAuth0Client({
+        domain: "dev-23dd-ysw.eu.auth0.com",
+        client_id: "A0nQItIFshhJOBKOTHI36dDcMAF16WzZ"
+      })
+    },
+    login: async function() {
+      await auth0.loginWithRedirect({
+        redirect_uri: window.location.origin
+      });
+    },
+
+    logout: async function() {
+      await auth0.logout({
+        returnTo: window.location.origin
+      });
+    },
+
+    handleLogin: async function() {
+      const isAuthenticated = await auth0.isAuthenticated();
+
+      const query = window.location.search;
+      if (query.includes("code=") && query.includes("state")) {
+        await auth0.handleRedirectCallback();
+        window.history.replaceState({}, document.title, "/");
+      }
+      this.updateLogState();
+    },
+
+    updateLogState: async function() {
+      this.isAuthenticated = await auth0.isAuthenticated();
+      this.token = await auth0.getTokenSilently();
+      this.user = await auth0.getUser();
     }
-  }
-})
+  },
+  created: async function() {
+    await this.configureClient();
+    this.handleLogin();
+    fetchAllDocs();
+  },
+});
