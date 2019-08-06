@@ -1,4 +1,8 @@
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('../lib/serviceworker.js');
+}
+
 const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
@@ -61,6 +65,7 @@ var app = new Vue({
         down: this.counterDown
       }
       db.put(count);
+      fetchAllDocs();
       fetchAllDocs();
 
       this.place = '';
