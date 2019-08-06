@@ -1,5 +1,5 @@
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('../lib/serviceworker.js');
+  navigator.serviceWorker.register('../lib/service-worker.js');
 }
 
 const db = new PouchDB('comptages');
