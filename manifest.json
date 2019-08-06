@@ -5,6 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "red",
+  "version": "0.1",
   "icons": [
     {
       "src": "/assets/compteur.png",
