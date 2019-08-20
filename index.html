@@ -89,24 +89,11 @@
                     <!-- Counter -->
 
                       <div class="row no-gutters input-group input-group-lg">
-                        <div class="col">
-                          <h1 class="display-1 text-center d-md-none" id="disp-countup"> {{ counterUp }} </h1>
-                          <input type="text" v-model="counterUp" placeholder="0" class="form-control d-none d-md-inline" id="disp-countup"></h1>
-                        </div>
-                        <div class="col">
-                          <h1 class="display-1 text-center d-md-none" id="disp-countdown"> {{ counterDown }} </h1>
-                          <input type="text" v-model="counterDown" placeholder="0" class="form-control d-none d-md-inline" id="disp-countup"></h1>
-                        </div>
-                        <div class="w-100"></div>
                         <div class="col d-md-none">
-                          <button  class="btn btn-outline-dark btn-block rounded-0" @click="counterUp +=1">
-                            <h1 class="display-5">&uarr;</h1>
-                          </button>
+                          <button-counter></button-counter>
                         </div>
                         <div class="col d-md-none">
-                          <button  class="btn btn-outline-dark btn-block rounded-0" @click="counterDown +=1">
-                            <h1 class="display-5">&darr;</h1>
-                          </button>
+                          <button-counter></button-counter>
                         </div>
                       </div>
 
@@ -147,6 +134,7 @@
       </main>
   </div>
 
+  <script src="app/counter.js"></script>
   <script src="app/index.js"></script>
 
   </body>

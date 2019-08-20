@@ -57,10 +57,7 @@ function fetchAllDocs() {
 const app = new Vue({
   el: '#app',
   data: {
-    counts: '',
-    counterUp: 0,
-    counterDown: 0,
-    place: '',
+    counts: {},
     isAuthenticated: false,
     token: null,
     user: null
