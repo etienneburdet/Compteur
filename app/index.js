@@ -1,4 +1,4 @@
-if ('serviceWorker' in navigator) {
+/* if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('../service-worker.js').then(function (registration)
         {
           console.log('Service worker registered successfully');
@@ -7,12 +7,12 @@ if ('serviceWorker' in navigator) {
           console.error('Error during service worker registration:', e);
         });
 }
-
+*/
 const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
 // Put test data in db
-const presetCounts = [
+/* const presetCounts = [
   {
     _id: "1",
     place: "Escalier A",
@@ -32,9 +32,9 @@ const presetCounts = [
     down: 5
   }
 ]
+*/
 
-
-db.bulkDocs(presetCounts);
+// db.bulkDocs(presetCounts);
 // -----------------------
 
 // DB function def to be used in app + initialize DB syncing
@@ -57,7 +57,18 @@ function fetchAllDocs() {
 const app = new Vue({
   el: '#app',
   data: {
-    counts: {},
+    counts: {
+      name: "St-Lazare",
+      points: {
+        name: "Escalier face Paul",
+        buttons: ["Flux 1", "Flux 2"]
+      },
+      name: "Paris-Nord",
+      points: {
+        name: "Couloir",
+        buttons: ["Flux 1", "Flux 2"]
+      }
+    },
     isAuthenticated: false,
     token: null,
     user: null
@@ -65,7 +76,7 @@ const app = new Vue({
   },
   methods: {
 
-    newCount: function(event) {
+    /* newCount: function(event) {
       const count = {
         _id: new Date().toISOString(),
         place: this.place,
@@ -78,8 +89,7 @@ const app = new Vue({
       this.place = '';
       this.counterUp = 0;
       this.counterDown = 0;
-    },
-
+    },*/
     deleteCount: function(count) {
       db.remove(count);
       fetchAllDocs();

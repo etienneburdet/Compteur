@@ -5,6 +5,7 @@ Vue.component('button-counter', {
       count: 0
     }
   },
+  props: ['buttonName'],
   methods: {
     countUp: function () {
       timeStamp = Date();
@@ -13,13 +14,9 @@ Vue.component('button-counter', {
     }
   },
   template: `
-    <div>
       <button  class="btn btn-outline-dark btn-block rounded-0" @click="countUp">
+        <p> {{ buttonName }} </p>
         <h1 class="display-5">{{ count }}</h1>
       </button>
-      <ul v-for="click in clicks">
-        <li>{{ click }}</li>
-      </ul>
-    </div>
   `
 })

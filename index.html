@@ -19,7 +19,6 @@
     <script src="https://kit.fontawesome.com/62d70bec9b.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js"></script>
-    <script src="service-worker.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -68,11 +67,11 @@
                 </div>
                 <div class="collapse show" id="collapseSwitch">
                   <div class="card-body p-0">
-                    <!-- form-->
+                    <!-- form-
                     <div class="container form-group p-2">
                       <form class="add-item">
                         <div class="input-group">
-                          <input type="text" class="form-control" v-model="place" required autofocus placeholder="Name" aria-label="Record name" aria-describedby="submit-button">
+                          <input type="text" class="form-control" required autofocus placeholder="Name" aria-label="Record name" aria-describedby="submit-button">
                           <div class="input-group-append">
                             <button @click="newCount" class="btn btn-outline-secondary" id="submit-button">Save</button>
                           </div>
@@ -85,15 +84,16 @@
                         </span>
                       </div>
                     </div>
+                    -->
 
                     <!-- Counter -->
 
                       <div class="row no-gutters input-group input-group-lg">
                         <div class="col d-md-none">
-                          <button-counter></button-counter>
+                          <button-counter button-name="test"></button-counter>
                         </div>
                         <div class="col d-md-none">
-                          <button-counter></button-counter>
+                          <button-counter button-name="2"></button-counter>
                         </div>
                       </div>
 
@@ -134,8 +134,10 @@
       </main>
   </div>
 
+  <script src="service-worker.js"></script>
   <script src="app/counter.js"></script>
   <script src="app/index.js"></script>
+
 
   </body>
 </html>
