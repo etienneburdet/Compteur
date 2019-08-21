@@ -43,6 +43,9 @@
       </header>
 
       <main>
+        <counts-list></counts-list>
+
+
         <div class="container-fluid p-0">
           <div class="row justify-content-md-center">
             <div class="col-md-6 col-lg-4 d-none d-md-block">
@@ -89,12 +92,9 @@
                     <!-- Counter -->
 
                       <div class="row no-gutters input-group input-group-lg">
-                        <div class="col d-md-none">
-                          <button-counter button-name="test"></button-counter>
-                        </div>
-                        <div class="col d-md-none">
-                          <button-counter button-name="2"></button-counter>
-                        </div>
+                        <button-counter button-name="test"></button-counter>
+                        <button-counter button-name="2"></button-counter>
+                        <button-counter button-name="4"></button-counter>
                       </div>
 
 
@@ -103,39 +103,13 @@
               </div>
             </div>
             <div class="col-md d-md-none">
-                    <!-- Records mobile -->
-              <div class="card">
-                <div class="card-header">
-                  <a data-toggle="collapse" href="#collapseSwitch" role="button" aria-expanded="true" aria-controls="collapseSwitch">
-                    Records
-                  </a>
-                </div>
-                <div class="collapse" id="collapseSwitch">
-                  <div class="card-body items col-md-6 col-lg-4 justify-content-center">
-                    <table class="table">
-                      <tbody class="placeholder">
-                        <tr v-for="count in counts">
-                          <td > {{ count.place }}</td>
-                          <td> {{ count.up }} </td>
-                          <td> {{ count.down }}</td>
-                          <td><a class="edit" href="#"><i class="fas fa-edit"></i></a></td>
-                          <td><button class="btn" @click="deleteCount(count)"><i class="fas fa-trash-alt"></i></button></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div>
-                      <button class="btn btn-outline-warning float-right" id="clear-items">Reset</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
       </main>
   </div>
 
   <script src="service-worker.js"></script>
-  <script src="app/counter.js"></script>
+  <script src="app/components.js"></script>
   <script src="app/index.js"></script>
 
 

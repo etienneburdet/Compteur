@@ -6,8 +6,8 @@
         {
           console.error('Error during service worker registration:', e);
         });
-}
-*/
+} */
+
 const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
@@ -57,18 +57,7 @@ function fetchAllDocs() {
 const app = new Vue({
   el: '#app',
   data: {
-    counts: {
-      name: "St-Lazare",
-      points: {
-        name: "Escalier face Paul",
-        buttons: ["Flux 1", "Flux 2"]
-      },
-      name: "Paris-Nord",
-      points: {
-        name: "Couloir",
-        buttons: ["Flux 1", "Flux 2"]
-      }
-    },
+    counts: {},
     isAuthenticated: false,
     token: null,
     user: null
