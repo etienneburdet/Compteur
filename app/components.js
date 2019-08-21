@@ -48,7 +48,7 @@ const dummyCountsList = [
       },
       {
         name: "Ascenceur A",
-        buttons: ["Flux 1", "Flux 2"]
+        buttons: [{id: "6", name: "Flux 1"},{id: "7", name: "Flux 1"}]
       },
     ],
   },
