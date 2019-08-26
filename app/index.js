@@ -58,6 +58,7 @@ const app = new Vue({
   el: '#app',
   data: {
     counts: {},
+    selectedCount: {},
     selectedPoint: {},
     isAuthenticated: false,
     token: null,
@@ -72,6 +73,9 @@ const app = new Vue({
   methods: {
     onSelectPoint: function(point) {
       this.selectedPoint = point;
+    },
+    onSelectCount: function(count) {
+      this.selectedCount = count;
     },
     /* newCount: function(event) {
       const count = {

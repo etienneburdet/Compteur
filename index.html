@@ -43,8 +43,8 @@
       </header>
 
       <main>
-        <counts-list v-if="!counting" @select-point="onSelectPoint"></counts-list>
-        <counter v-else :point="selectedPoint"></counter>
+        <counts-list v-if="!counting" @select-point="onSelectPoint" @select-count="onSelectCount"></counts-list>
+        <counter v-else :count="selectedCount" :point="selectedPoint"></counter>
 
 
         <div class="container-fluid p-0">
@@ -63,6 +63,7 @@
             </div>
             <div class="col-md-3">
               <!-- collapse form + counter -->
+              <!--
               <div class="card mb-0">
                 <div class="card-header" id="headingCounter">
                   <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseSwitch" aria-expanded="true" aria-controls="collapseOne">
@@ -71,7 +72,7 @@
                 </div>
                 <div class="collapse show" id="collapseSwitch">
                   <div class="card-body p-0">
-                    <!-- form-
+                     form-
                     <div class="container form-group p-2">
                       <form class="add-item">
                         <div class="input-group">

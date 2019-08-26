@@ -24,10 +24,10 @@ Vue.component('button-counter', {
 })
 
 Vue.component('counter', {
-  props: ['point'],
+  props: ['count','point'],
   template: `
   <div class="card mb-0">
-    <div class="card-header"> {{ point.name }} </div>
+    <div class="card-header"> {{ count.name}} - {{ point.name }} </div>
     <div class="card-body p-0">
       <div class="row no-gutters">
         <button-counter v-for="button in point.buttons" :key="button.id" :buttonName="button.name"></button-counter>
@@ -67,7 +67,7 @@ Vue.component('counts-list', {
   template: `
     <div>
       <ul v-for="count in counts" class="list-group">
-        <li class="list-group-item list-group-item-action" data-toggle="collapse" :data-target="'#' + count.name">
+        <li class="list-group-item list-group-item-action" @click="$emit('select-count', count)" data-toggle="collapse" :data-target="'#' + count.name">
           {{ count.name }}
           <div class="collapse" :id="count.name">
             <ul class="list-group">
