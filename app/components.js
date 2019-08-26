@@ -30,9 +30,10 @@ Vue.component('counter', {
     <div class="card-header"> {{ point.name }} </div>
     <div class="card-body p-0">
       <div class="row no-gutters">
-        <button-counter v-for="button in  point.buttons" :key="button.id" :button-name="button.name"></button-counter>
+        <button-counter v-for="button in point.buttons" :key="button.id" :buttonName="button.name"></button-counter>
       </div>
     </div>
+    <button class="btn btn-primary" @click="$emit('save-count')">Save</button>
   </div>
   `
 
@@ -60,13 +61,7 @@ const dummyCountsList = [
 Vue.component('counts-list', {
   data: function () {
     return {
-      selectedPoint: {},
       counts: dummyCountsList
-    }
-  },
-  methods: {
-    selectPoint: function (point) {
-      this.selectedPoint = point;
     }
   },
   template: `
@@ -75,15 +70,14 @@ Vue.component('counts-list', {
         <li class="list-group-item list-group-item-action" data-toggle="collapse" :data-target="'#' + count.name">
           {{ count.name }}
           <div class="collapse" :id="count.name">
-          <ul class="list-group">
-          <li v-for="point in count.points" @click="selectPoint(point)" class="list-group-item list-group-item-action">
-          {{ point.name }}
-          </li>
-          </ul>
+            <ul class="list-group">
+            <li v-for="point in count.points" @click="$emit('select-point', point)" class="list-group-item list-group-item-action">
+            {{ point.name }}
+            </li>
+            </ul>
           </div>
         </li>
       </ul>
-        <counter :point="selectedPoint"></counter>
     </div>
   `
 })

@@ -58,13 +58,21 @@ const app = new Vue({
   el: '#app',
   data: {
     counts: {},
+    selectedPoint: {},
     isAuthenticated: false,
     token: null,
     user: null
 
   },
+  computed: {
+    counting: function () {
+      return !(Object.entries(this.selectedPoint).length === 0)
+    }
+  },
   methods: {
-
+    onSelectPoint: function(point) {
+      this.selectedPoint = point;
+    },
     /* newCount: function(event) {
       const count = {
         _id: new Date().toISOString(),

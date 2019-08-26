@@ -43,7 +43,8 @@
       </header>
 
       <main>
-        <counts-list></counts-list>
+        <counts-list v-if="!counting" @select-point="onSelectPoint"></counts-list>
+        <counter v-else :point="selectedPoint"></counter>
 
 
         <div class="container-fluid p-0">
