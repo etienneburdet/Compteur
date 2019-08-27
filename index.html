@@ -44,7 +44,7 @@
 
       <main>
         <counts-list v-if="!counting" @select-point="onSelectPoint" @select-count="onSelectCount"></counts-list>
-        <counter v-else :count="selectedCount" :point="selectedPoint"></counter>
+        <counter v-else :count="selectedCount" :point="selectedPoint" @register-click="registerClick"></counter>
 
 
         <div class="container-fluid p-0">

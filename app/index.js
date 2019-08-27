@@ -12,29 +12,33 @@ const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
 // Put test data in db
-/* const presetCounts = [
+const dummyCountsList = [
   {
-    _id: "1",
-    place: "Escalier A",
-    up: 10,
-    down: 5
+    name: "St-Lazare",
+    points: [
+      {
+        name: "Escalier face Paul",
+        buttons: [
+          {id: "3", name: "Flux 1", clicks: ["lol","test"]},
+          {id: "4", name: "Flux 2", clicks: ["Salut"]},
+          {id: "5", name: "Flux 3", clicks: []}
+        ]
+      },
+      {
+        name: "Ascenceur A",
+        buttons: [
+          {id: "6", name: "Flux 1", clicks: []},
+          {id: "7", name: "Flux 1", clicks: []}
+        ]
+      },
+    ],
   },
-{
-    _id: "2",
-    place: "Hall",
-    up: 10,
-    down: 5
-  },
-{
-    _id: "3",
-    place: "PASO sud",
-    up: 10,
-    down: 5
+  {
+    name: "Paris-Nord"
   }
 ]
-*/
 
-// db.bulkDocs(presetCounts);
+db.bulkDocs(dummyCountsList);
 // -----------------------
 
 // DB function def to be used in app + initialize DB syncing
@@ -58,10 +62,7 @@ const app = new Vue({
   el: '#app',
   data: {
     counts: {},
-    selectedCount: {
-      object: {},
-      index: ''
-    },
+    selectedCount: {},
     selectedPoint: {
       object: {},
       index: ''
@@ -81,9 +82,16 @@ const app = new Vue({
       this.selectedPoint.object = point;
       this.selectedPoint.index = index;
     },
-    onSelectCount: function(count, index) {
-      this.selectedCount.object = count;
-      this.selectedCount.index = index;
+    onSelectCount: function(count) {
+      this.selectedCount = count;
+    },
+    registerClick: function(buttonIndex) {
+      let pointIndex = this.selectedPoint.index;
+      let button = this.selectedCount.points[pointIndex].buttons[buttonIndex];
+
+      button.clicks.push(Date());
+      db.put(this.selectedCount);
+
     },
     /* newCount: function(event) {
       const count = {
