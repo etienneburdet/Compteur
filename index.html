@@ -43,12 +43,13 @@
       </header>
 
       <main>
-        <counts-list v-if="!counterOn" :counts="counts" @select-point="onSelectPoint" @select-count="onSelectCount"></counts-list>
-        <counter v-else :count="selectedCount" :point="selectedPoint" @register-click="registerClick" @end-count="endCount"></counter>
-
 
         <div class="container-fluid p-0">
           <div class="row justify-content-md-center">
+            <counts-list v-if="!counterOn" :counts="counts" @select-point="onSelectPoint" @select-count="onSelectCount"></counts-list>
+            <counter v-else :count="selectedCount" :point="selectedPoint" @register-click="registerClick" @end-count="endCount"></counter>
+            <!--
+
             <div class="col-md-6 col-lg-4 d-none d-md-block">
               <table class="table">
                 <tbody class="placeholder">
@@ -61,6 +62,7 @@
                 </tbody>
               </table>
             </div>
+
             <div class="col-md-3">
               <!-- collapse form + counter -->
               <!--
@@ -89,15 +91,14 @@
                         </span>
                       </div>
                     </div>
-                    -->
-
-
                   </div>
                 </div>
               </div>
+
             </div>
             <div class="col-md d-md-none">
             </div>
+                        -->
           </div>
       </main>
   </div>
