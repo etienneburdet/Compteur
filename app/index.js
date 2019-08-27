@@ -14,13 +14,14 @@ const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f3
 // Put test data in db
 const dummyCountsList = [
   {
+    _id: "test1",
     name: "St-Lazare",
     points: [
       {
         name: "Escalier face Paul",
         buttons: [
-          {id: "3", name: "Flux 1", clicks: ["lol","test"]},
-          {id: "4", name: "Flux 2", clicks: ["Salut"]},
+          {id: "3", name: "Flux 1", clicks: []},
+          {id: "4", name: "Flux 2", clicks: []},
           {id: "5", name: "Flux 3", clicks: []}
         ]
       },
@@ -34,6 +35,7 @@ const dummyCountsList = [
     ],
   },
   {
+    _id: "test2",
     name: "Paris-Nord"
   }
 ]
@@ -73,7 +75,7 @@ const app = new Vue({
 
   },
   computed: {
-    counting: function () {
+    counterOn: function () {
       return !(Object.entries(this.selectedPoint.object).length === 0)
     }
   },
@@ -90,8 +92,14 @@ const app = new Vue({
       let button = this.selectedCount.points[pointIndex].buttons[buttonIndex];
 
       button.clicks.push(Date());
+    },
+    endCount : function() {
       db.put(this.selectedCount);
-
+      this.selectedCount = {};
+      this.selectedPoint = {
+        object: {},
+        index: ''
+      };
     },
     /* newCount: function(event) {
       const count = {

@@ -26,23 +26,25 @@ Vue.component('counter', {
         <button-counter v-for="(button, index) in point.object.buttons" :key="button.id" :button="button" @button-click="$emit('register-click', index)"></button-counter>
       </div>
     </div>
-    <button class="btn btn-primary">Save</button>
+    <button class="btn btn-primary" @click="$emit('end-count')">Terminer</button>
   </div>
   `
 })
 
 
 Vue.component('counts-list', {
-  data: function () {
-    return {
-      counts: dummyCountsList
+  props:['counts'],
+  methods: {
+    deleteDoc: function(doc) {
+      db.remove(doc);
+      fetchAllDocs();
     }
   },
   template: `
     <div>
       <ul v-for="count in counts" class="list-group">
         <li class="list-group-item list-group-item-action" @click="$emit('select-count', count)" data-toggle="collapse" :data-target="'#' + count.name">
-          {{ count.name }}
+          {{ count.name }} - <button @click="deleteDoc(count)">suppr</button>
           <div class="collapse" :id="count.name">
             <ul class="list-group">
             <li v-for="(point, index) in count.points" @click="$emit('select-point', point, index)" class="list-group-item list-group-item-action">
