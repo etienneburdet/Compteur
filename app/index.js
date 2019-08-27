@@ -58,8 +58,14 @@ const app = new Vue({
   el: '#app',
   data: {
     counts: {},
-    selectedCount: {},
-    selectedPoint: {},
+    selectedCount: {
+      object: {},
+      index: ''
+    },
+    selectedPoint: {
+      object: {},
+      index: ''
+    },
     isAuthenticated: false,
     token: null,
     user: null
@@ -67,15 +73,17 @@ const app = new Vue({
   },
   computed: {
     counting: function () {
-      return !(Object.entries(this.selectedPoint).length === 0)
+      return !(Object.entries(this.selectedPoint.object).length === 0)
     }
   },
   methods: {
-    onSelectPoint: function(point) {
-      this.selectedPoint = point;
+    onSelectPoint: function(point, index) {
+      this.selectedPoint.object = point;
+      this.selectedPoint.index = index;
     },
-    onSelectCount: function(count) {
-      this.selectedCount = count;
+    onSelectCount: function(count, index) {
+      this.selectedCount.object = count;
+      this.selectedCount.index = index;
     },
     /* newCount: function(event) {
       const count = {
