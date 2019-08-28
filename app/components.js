@@ -92,9 +92,32 @@ Vue.component('add-count', {
   data: function() {
     return {
       countName: "Nouveau Comptage",
-      pointName: "Nouveau Point",
-      buttonName: "Nouveau Flux",
-      editing: "",
+      points: [],
+    }
+  },
+  methods: {
+    addPoint: function() {
+      const point = {
+        id: Date.now(),
+        name: "Nouveau point",
+        done: false,
+        buttons: [
+          {
+            id: Date.now(),
+            name: "Nouveau flux",
+            clicks: []
+          }
+        ]
+      };
+      this.points.push(point);
+    },
+    addButton: function(point) {
+      const button = {
+        id: Date.now(),
+        name: "Nouveau flux",
+        clicks: []
+      };
+      point.buttons.push(button);
     }
   },
   template: ` 
@@ -104,11 +127,21 @@ Vue.component('add-count', {
      </div>
      <div class="card-body">
       <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <editable v-model="pointName"></editable>
+        <li v-for="point in points" class="list-group-item">
+          <ul class="list-group list-group-horizontal">
+            <li class="list-group-item">
+              <editable v-model="point.name"></editable>
+            </li>
+            <li v-for="button in point.buttons" class="list-group-item">
+              <editable v-model="button.name"></editable>
+            </li>
+            <li @click="addButton(point)" class="list-group-item">
+              <button class="btn btn-secondary">+</button>
+            </li>
+          </ul>
         </li>
-        <li class="list-group-item">
-          {{pointName}}
+        <li @click="addPoint" class="list-group-item">
+          <h3 align="center">+</h3>
         </li>
       </ul>
       <br>
