@@ -79,7 +79,7 @@ Vue.component('editable', {
   },
   template: `
   <div v-if="editing == true" class="input-group mb-3">
-    <input :value='value' @input="$emit('input', $event.target.value)" type="text" class="form-control">
+    <input :value="value" @input="$emit('input', $event.target.value)" class="form-control" type="text">
     <div class="input-group-append">
       <button @click="editing = false" class="btn btn-secondary">OK</button>
     </div>
@@ -88,38 +88,51 @@ Vue.component('editable', {
   `
 })
 
+//empty buttons and points to be used as default/reset values in add-count component
+function emptyButton() {
+  return {
+    id: Date.now(),
+    name: "Nouveau flux",
+    clicks: []
+  }
+}
+
+function emptyPoint() {
+    return {
+      id: Date.now(),
+      name: "Nouveau point",
+      done: false,
+      buttons: [emptyButton()]
+    }
+}
+
 Vue.component('add-count', {
   data: function() {
     return {
       countName: "Nouveau Comptage",
-      points: [],
+      points: [emptyPoint()],
     }
   },
   methods: {
     addPoint: function() {
-      const point = {
-        id: Date.now(),
-        name: "Nouveau point",
-        done: false,
-        buttons: [
-          {
-            id: Date.now(),
-            name: "Nouveau flux",
-            clicks: []
-          }
-        ]
-      };
-      this.points.push(point);
+      this.points.push(emptyPoint());
     },
     addButton: function(point) {
-      const button = {
-        id: Date.now(),
-        name: "Nouveau flux",
-        clicks: []
-      };
-      point.buttons.push(button);
+      point.buttons.push(emptyButton());
+    },
+    saveCount: function() {
+      const count = {
+        name: this.countName,
+        points: this.points
+      }
+
+      db.post(count);
+      fetchAllDocs();
+      this.points = emptyPoint();
+      this.name = "";
     }
   },
+
   template: ` 
     <div class="card">
      <div class="card-header">
@@ -127,27 +140,30 @@ Vue.component('add-count', {
      </div>
      <div class="card-body">
       <ul class="list-group list-group-flush">
-        <li v-for="point in points" class="list-group-item">
-          <ul class="list-group list-group-horizontal">
-            <li class="list-group-item">
+        <li v-for="point in points" :key="point.id" class="list-group-item">
+          <div class="row">
+            <div class="col">
               <editable v-model="point.name"></editable>
-            </li>
-            <li v-for="button in point.buttons" class="list-group-item">
-              <editable v-model="button.name"></editable>
-            </li>
-            <li @click="addButton(point)" class="list-group-item">
-              <button class="btn btn-secondary">+</button>
-            </li>
-          </ul>
+            </div>
+            <div v-for="button in point.buttons" :key="button.id" class="col-6">
+              <div class="card">
+                <div class="card-body">
+                <editable v-model="button.name"></editable>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <button @click="addButton(point)" class="btn btn-secondary">+</button>
+            </div>
+          </div>
         </li>
         <li @click="addPoint" class="list-group-item">
           <h3 align="center">+</h3>
         </li>
       </ul>
       <br>
-      <button class="btn btn-primary">Sauvergarder</button>
+      <button class="btn btn-primary" @click="saveCount" data-toggle="collapse" data-target="#newCount">Sauvergarder</button>
      </div>
-
     </div>
   `
 })
