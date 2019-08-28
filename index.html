@@ -47,7 +47,7 @@
         <div class="container-fluid p-0">
           <div class="row justify-content-md-center">
             <counts-list v-if="!counterOn" :counts="counts" @select-point="onSelectPoint" @select-count="onSelectCount"></counts-list>
-            <counter v-else :count="selectedCount" :point="selectedPoint" @register-click="registerClick" @end-count="endCount"></counter>
+            <counter v-else :count-name="selectedCount.name" :point="selectedPoint" @register-click="registerClick" @end-count="endCount"></counter>
             <!--
 
             <div class="col-md-6 col-lg-4 d-none d-md-block">

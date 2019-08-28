@@ -19,6 +19,7 @@ const dummyCountsList = [
     points: [
       {
         name: "Escalier face Paul",
+        done: false,
         buttons: [
           {id: "3", name: "Flux 1", clicks: []},
           {id: "4", name: "Flux 2", clicks: []},
