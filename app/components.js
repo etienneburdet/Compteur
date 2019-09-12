@@ -40,11 +40,28 @@ Vue.component('counter', {
 
 Vue.component('counts-list', {
   props:['counts'],
+  data: function() {
+    return {
+      newCountName: "Nouveau Comptage",
+      newPointName: "Nouveau Point"
+    }
+  },
   methods: {
     deleteDoc: function(doc) {
       db.remove(doc);
       fetchAllDocs();
-    }
+    },
+    addCount: function() {
+        const count = {
+          _id: "count"+Date.now().toString(),
+          name: this.newCountName,
+          points:  [emptyPoint()]
+        }
+
+        db.put(count);
+        fetchAllDocs();
+      }
+
   },
   template: `
     <div class="col-md-8 col-lg-6">
@@ -60,7 +77,7 @@ Vue.component('counts-list', {
           </div>
         </li>
       </ul>
-      <add-count></add-count>
+      <add-to-list @save="addCount" v-model="newCountName"></add-count>
     </div>
   `
 })
@@ -84,6 +101,30 @@ Vue.component('editable', {
         <slot></slot>
       </div>
     </div>
+  `
+})
+
+Vue.component('add-to-list', {
+  props: ['value'],
+  data: function() {
+    return{
+      editing: false
+    }
+  },
+  template: ` 
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-secondary">
+        <div v-if="editing == true" class="input-group mb-3">
+          <input :value="value" @input="$emit('input', $event.target.value)" class="form-control" type="text">
+          <div class="input-group-append">
+            <button @click="editing = false; $emit('save')" class="btn btn-secondary">OK</button>
+          </div>
+        </div>
+        <div v-else @click="editing = true">
+          <h2 align="center">+</h2>
+        </div>
+      </li>
+    </ul>
   `
 })
 
@@ -124,10 +165,9 @@ Vue.component('add-count', {
       fetchAllDocs();
     }
   },
-
   template: ` 
     <ul class="list-group">
-      <li class="list-group-item list-group-item-secondary" data-toggle="collapse" data-target="#newCount">
+      <li class="list-group-item list-group-item-secondary">
         <editable @save="saveCount" v-model="countName"><h2 align="center">+</h2></editable>
       </li>
     </ul>
