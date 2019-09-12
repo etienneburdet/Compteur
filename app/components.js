@@ -49,9 +49,9 @@ Vue.component('counts-list', {
   template: `
     <div class="col-md-8 col-lg-6">
       <ul class="list-group">
-        <li v-for="count in counts" @click="$emit('select-count', count)" class="list-group-item" data-toggle="collapse" :data-target="'#' + count.name">
+        <li v-for="count in counts" @click="$emit('select-count', count)" class="list-group-item" data-toggle="collapse" :data-target="'#' + count._id">
           {{ count.name }} - <button @click="deleteDoc(count)">suppr</button>
-          <div class="collapse" :id="count.name">
+          <div class="collapse" :id="count._id">
             <ul class="list-group list-group-flush">
             <li v-for="(point, index) in count.points" @click="$emit('select-point', point, index)" class="list-group-item list-group-item-action">
             {{ point.name }}
@@ -115,7 +115,7 @@ Vue.component('add-count', {
   methods: {
     saveCount: function() {
       const count = {
-        _id: "count-"+Date.now().toString(),
+        _id: "count"+Date.now().toString(),
         name: this.countName,
         points: this.points
       }
