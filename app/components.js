@@ -59,13 +59,8 @@ Vue.component('counts-list', {
             </ul>
           </div>
         </li>
-        <div class="collapse" id="newCount">
-          <add-count></add-count>
-        </div>
-        <li class="list-group-item list-group-item-secondary" data-toggle="collapse" data-target="#newCount">
-          <h2 align="center">+</h2>
-        </li>
       </ul>
+      <add-count></add-count>
     </div>
   `
 })
@@ -78,13 +73,17 @@ Vue.component('editable', {
     }
   },
   template: `
-  <div v-if="editing == true" class="input-group mb-3">
-    <input :value="value" @input="$emit('input', $event.target.value)" class="form-control" type="text">
-    <div class="input-group-append">
-      <button @click="editing = false" class="btn btn-secondary">OK</button>
+    <div>
+      <div v-if="editing == true" class="input-group mb-3">
+        <input :value="value" @input="$emit('input', $event.target.value)" class="form-control" type="text">
+        <div class="input-group-append">
+          <button @click="editing = false; $emit('save')" class="btn btn-secondary">OK</button>
+        </div>
+      </div>
+      <div v-else @click="editing = true">
+        <slot></slot>
+      </div>
     </div>
-  </div>
-  <p v-else @click="editing = true">{{ value }}</p>
   `
 })
 
@@ -114,56 +113,23 @@ Vue.component('add-count', {
     }
   },
   methods: {
-    addPoint: function() {
-      this.points.push(emptyPoint());
-    },
-    addButton: function(point) {
-      point.buttons.push(emptyButton());
-    },
     saveCount: function() {
       const count = {
+        _id: "count-"+Date.now().toString(),
         name: this.countName,
         points: this.points
       }
 
-      db.post(count);
+      db.put(count);
       fetchAllDocs();
-      this.points = emptyPoint();
-      this.name = "";
     }
   },
 
   template: ` 
-    <div class="card">
-     <div class="card-header">
-       <editable v-model="countName"></editable>
-     </div>
-     <div class="card-body">
-      <ul class="list-group list-group-flush">
-        <li v-for="point in points" :key="point.id" class="list-group-item">
-          <div class="row">
-            <div class="col">
-              <editable v-model="point.name"></editable>
-            </div>
-            <div v-for="button in point.buttons" :key="button.id" class="col-6">
-              <div class="card">
-                <div class="card-body">
-                <editable v-model="button.name"></editable>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <button @click="addButton(point)" class="btn btn-secondary">+</button>
-            </div>
-          </div>
-        </li>
-        <li @click="addPoint" class="list-group-item">
-          <h3 align="center">+</h3>
-        </li>
-      </ul>
-      <br>
-      <button class="btn btn-primary" @click="saveCount" data-toggle="collapse" data-target="#newCount">Sauvergarder</button>
-     </div>
-    </div>
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-secondary" data-toggle="collapse" data-target="#newCount">
+        <editable @save="saveCount" v-model="countName"><h2 align="center">+</h2></editable>
+      </li>
+    </ul>
   `
 })
