@@ -60,46 +60,39 @@ Vue.component('counts-list', {
 
         db.put(count);
         fetchAllDocs();
+      },
+    addPoint: function(count) {
+      const point = {
+        id: "point"+Date.now().toString(),
+        name: this.newPointName,
+        done: false,
+        buttons: [emptyButton()]
       }
+
+      count.points.push(point);
+      db.put(count).catch(function(err){console.log(err)});
+      fetchAllDocs();
+    }
 
   },
   template: `
     <div class="col-md-8 col-lg-6">
       <ul class="list-group">
-        <li v-for="count in counts" @click="$emit('select-count', count)" class="list-group-item" data-toggle="collapse" :data-target="'#' + count._id">
-          {{ count.name }} - <button @click="deleteDoc(count)">suppr</button>
+        <li v-for="count in counts" @click="$emit('select-count', count)" class="list-group-item">
+          <div data-toggle="collapse" :data-target="'#' + count._id">
+            {{ count.name }} - <button @click="deleteDoc(count)">suppr</button>
+          </div>
           <div class="collapse" :id="count._id">
             <ul class="list-group list-group-flush">
-            <li v-for="(point, index) in count.points" @click="$emit('select-point', point, index)" class="list-group-item list-group-item-action">
-            {{ point.name }}
-            </li>
+              <li v-for="(point, index) in count.points" @click="$emit('select-point', point, index)" class="list-group-item list-group-item-action">
+              {{ point.name }}
+              </li>
             </ul>
+            <add-to-list @save="addPoint(count)" v-model="newPointName"></add-to-list>
           </div>
         </li>
       </ul>
-      <add-to-list @save="addCount" v-model="newCountName"></add-count>
-    </div>
-  `
-})
-
-Vue.component('editable', {
-  props: ['value'],
-  data: function() {
-    return{
-      editing: false
-    }
-  },
-  template: `
-    <div>
-      <div v-if="editing == true" class="input-group mb-3">
-        <input :value="value" @input="$emit('input', $event.target.value)" class="form-control" type="text">
-        <div class="input-group-append">
-          <button @click="editing = false; $emit('save')" class="btn btn-secondary">OK</button>
-        </div>
-      </div>
-      <div v-else @click="editing = true">
-        <slot></slot>
-      </div>
+      <add-to-list @save="addCount" v-model="newCountName"></add-to-list>
     </div>
   `
 })
@@ -145,31 +138,3 @@ function emptyPoint() {
       buttons: [emptyButton()]
     }
 }
-
-Vue.component('add-count', {
-  data: function() {
-    return {
-      countName: "Nouveau Comptage",
-      points: [emptyPoint()],
-    }
-  },
-  methods: {
-    saveCount: function() {
-      const count = {
-        _id: "count"+Date.now().toString(),
-        name: this.countName,
-        points: this.points
-      }
-
-      db.put(count);
-      fetchAllDocs();
-    }
-  },
-  template: ` 
-    <ul class="list-group">
-      <li class="list-group-item list-group-item-secondary">
-        <editable @save="saveCount" v-model="countName"><h2 align="center">+</h2></editable>
-      </li>
-    </ul>
-  `
-})
