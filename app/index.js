@@ -78,7 +78,7 @@ const app = new Vue({
   computed: {
     counterOn: function () {
       return !(Object.entries(this.selectedPoint.object).length === 0)
-    }
+    },
   },
   methods: {
     onSelectPoint: function(point, index) {
@@ -102,20 +102,6 @@ const app = new Vue({
         index: ''
       };
     },
-    /* newCount: function(event) {
-      const count = {
-        _id: new Date().toISOString(),
-        place: this.place,
-        up: this.counterUp,
-        down: this.counterDown
-      }
-      db.put(count);
-      fetchAllDocs();
-
-      this.place = '';
-      this.counterUp = 0;
-      this.counterDown = 0;
-    },*/
     deleteCount: function(count) {
       db.remove(count);
       fetchAllDocs();
