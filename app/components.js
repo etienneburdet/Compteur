@@ -23,17 +23,15 @@ Vue.component('button-counter', {
 Vue.component('counter', {
   props: ['countName','point'],
   computed:{
-    formatedData: function() {
-      const formatedData = this.point.object.buttons.map(button => {
-        const rObj = {};
-        rObj[button.name] = button.clicks;
-        return rObj;
-      });
-      return formatedData
-    },
     downloadPoint: function() {
-      const dData = JSON.stringify(this.formatedData, null, 2);
-      const blob = new Blob([dData], {type: 'application/json'});
+      const btnsArr = this.point.object.buttons;
+      let dData = [];
+      btnsArr.forEach(el=> {
+        const csvRow = el.name + ',' + el.clicks.join(',') + '\r\n';
+        dData += csvRow;
+      });
+
+      const blob = new Blob([dData], {type: 'text/csv'});
       const url = window.URL.createObjectURL(blob);
 
       return url
@@ -50,7 +48,7 @@ Vue.component('counter', {
       </div>
       <button class="btn btn-primary d-md-none" @click="$emit('end-count')">Terminer</button>
     </div>
-    <a class="btn btn-primary" :href="downloadPoint" download="point.json">download</a>
+    <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
     <span>{{ JSON.stringify(this.formatedData, null, 2) }}</span>
   </div>
   `
