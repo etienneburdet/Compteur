@@ -25,9 +25,9 @@ Vue.component('counter', {
   computed:{
     downloadPoint: function() {
       const btnsArr = this.point.object.buttons;
-      let dData = [];
+      let dData = 'data:text/csv;sep=;charset=utf-8,%EF%BB%B \r\n';
       btnsArr.forEach(el=> {
-        const csvRow = el.name + ',' + el.clicks.join(',') + '\r\n';
+        const csvRow = el.name + ';' + el.clicks.join(';') + '\r\n';
         dData += csvRow;
       });
 
