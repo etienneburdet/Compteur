@@ -20,6 +20,28 @@ Vue.component('button-counter', {
   `
 })
 
+Vue.component('edit-count', {
+  props: ['countName','point'],
+  template: `
+    <div class="col-md-8 col-lg-6">
+      <div class="card mb-0">
+        <div class="card-header form-group">
+          {{countName}} -
+          <input type="text" :placeholder="point.object.name">
+        </div>
+        <div class="card-body p-0">
+          <div class="row no-gutters">
+            <div class="card col-md-6" v-for="(button, index) in point.object.buttons" :key="button.id">
+              <input type="text" :placeholder="button.name">
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" @click="$emit('save')">Sauvegarder</button>
+      </div>
+    </div>
+  `
+})
+
 Vue.component('counter', {
   props: ['countName','point'],
   computed:{
@@ -101,7 +123,7 @@ Vue.component('counts-list', {
           <div class="collapse" :id="count._id">
             <ul class="list-group list-group-flush">
               <li v-for="(point, index) in count.points" @click="$emit('select-point', point, index)" class="list-group-item list-group-item-action">
-              {{ point.name }}
+              {{ point.name }} - <button @click="$emit('edit-point', point, index)">edit</button>
               </li>
             </ul>
             <add-to-list @save="addPoint(count)" v-model="newPointName"><h3 align="center">+</h3></add-to-list>

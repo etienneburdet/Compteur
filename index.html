@@ -46,59 +46,10 @@
 
         <div class="container-fluid p-0">
           <div class="row justify-content-md-center">
-            <counts-list v-if="!counterOn" :counts="counts" @select-point="onSelectPoint" @select-count="onSelectCount"></counts-list>
-            <counter v-else :count-name="selectedCount.name" :point="selectedPoint" @register-click="registerClick" @end-count="endCount"></counter>
-            <!--
+            <counter v-if="counting" :count-name="selectedCount.name" :point="selectedPoint" @register-click="registerClick" @end-count="endCount"></counter>
+            <edit-count v-else-if="editingPoint" :count-name="selectedCount.name" :point="selectedPoint" @save="editingPoint = false; counting = true"></edit-count>
+            <counts-list v-else :counts="counts" @select-point="onSelectPoint" @select-count="onSelectCount" @edit-point="onEditPoint"></counts-list>
 
-            <div class="col-md-6 col-lg-4 d-none d-md-block">
-              <table class="table">
-                <tbody class="placeholder">
-                  <tr v-for="count in counts">
-                    <td > {{ count.place }}</td>
-                    <td> {{ count.up }} </td>
-                    <td> {{ count.down }}</td>
-                    <td><button class="btn" @click="deleteCount(count)"><i class="fas fa-trash-alt"></i></button></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="col-md-3">
-              <!-- collapse form + counter -->
-              <!--
-              <div class="card mb-0">
-                <div class="card-header" id="headingCounter">
-                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseSwitch" aria-expanded="true" aria-controls="collapseOne">
-                    Counter
-                  </button>
-                </div>
-                <div class="collapse show" id="collapseSwitch">
-                  <div class="card-body p-0">
-                     form-
-                    <div class="container form-group p-2">
-                      <form class="add-item">
-                        <div class="input-group">
-                          <input type="text" class="form-control" required autofocus placeholder="Name" aria-label="Record name" aria-describedby="submit-button">
-                          <div class="input-group-append">
-                            <button @click="newCount" class="btn btn-outline-secondary" id="submit-button">Save</button>
-                          </div>
-                        </div>
-                      </form>
-                      <div class="p-2">
-                        <span style="font-size: 2rem">
-                          <i class="far fa-comment-alt"></i>
-                          <i class="fas fa-map-marker-alt"></i>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <div class="col-md d-md-none">
-            </div>
-                        -->
           </div>
       </main>
   </div>
