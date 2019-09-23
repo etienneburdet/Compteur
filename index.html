@@ -46,10 +46,25 @@
 
         <div class="container-fluid p-0">
           <div class="row justify-content-md-center">
-            <counter v-if="counting" :count-name="selectedCount.name" :point="selectedPoint" @register-click="registerClick" @end-count="endCount"></counter>
-            <edit-count v-else-if="editingPoint" :count-name="selectedCount.name" :point="selectedPoint" @save="editingPoint = false; counting = true"></edit-count>
-            <counts-list v-else :counts="counts" @select-point="onSelectPoint" @select-count="onSelectCount" @edit-point="onEditPoint"></counts-list>
-
+            <counter
+              v-if="counting"
+              :count-name="selectedCount.name"
+              :point="selectedPoint"
+              @register-click="registerClick"
+              @end-count="endCount"
+            ></counter>
+            <edit-count
+              v-else-if="editingPoint"
+              :count="selectedCount"
+              :point="selectedPoint"
+              @save="editingPoint = false; counting = true"
+            ></edit-count>
+            <counts-list
+              v-else :counts="counts"
+              @select-point="onSelectPoint"
+              @select-count="onSelectCount"
+              @edit-point="onEditPoint"
+            ></counts-list>
           </div>
       </main>
   </div>

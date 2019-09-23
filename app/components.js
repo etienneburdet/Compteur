@@ -21,22 +21,44 @@ Vue.component('button-counter', {
 })
 
 Vue.component('edit-count', {
-  props: ['countName','point'],
+  props: ['count','point'],
+  data: function() {
+    return {
+      pointName: this.point.object.name,
+      buttons: this.point.object.buttons
+    }
+  },
+  methods: {
+    addButton: function() {
+      console.log("add button");
+      this.point.object.buttons.push(emptyButton());
+    }
+  },
   template: `
     <div class="col-md-8 col-lg-6">
       <div class="card mb-0">
-        <div class="card-header form-group">
-          {{countName}} -
-          <input type="text" :placeholder="point.object.name">
+        <div class="card-header">
+          {{count.name}} -
+          <input type="text" class="form-control" v-model="pointName">
         </div>
         <div class="card-body p-0">
           <div class="row no-gutters">
-            <div class="card col-md-6" v-for="(button, index) in point.object.buttons" :key="button.id">
-              <input type="text" :placeholder="button.name">
-            </div>
+            <editable-card v-for="(button, index) in buttons" :key="button.id" v-model="button.name"></editable-card>
           </div>
+          <button class="btn btn-secondary" @click="addButton">+</button>
         </div>
         <button class="btn btn-primary" @click="$emit('save')">Sauvegarder</button>
+      </div>
+    </div>
+  `
+})
+
+Vue.component('editable-card', {
+  props: ['value'],
+  template: `
+    <div class="card m-1" style="width: 18rem;">
+      <div class="card-body">
+        <input :value="value" @input="$emit('input', $event.target.value)" type="text" class="form-control p-2" >
       </div>
     </div>
   `
@@ -71,7 +93,6 @@ Vue.component('counter', {
       <button class="btn btn-primary d-md-none" @click="$emit('end-count')">Terminer</button>
     </div>
     <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
-    <span>{{ JSON.stringify(this.formatedData, null, 2) }}</span>
   </div>
   `
 })
