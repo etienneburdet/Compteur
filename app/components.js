@@ -28,10 +28,25 @@ Vue.component('edit-count', {
       buttons: this.point.object.buttons
     }
   },
+  computed: {
+    updatedCount: function() {
+      let updatedPoint = this.count.points[this.point.index];
+      updatedPoint.name = this.pointName;
+      updatedPoint.buttons = this.buttons;
+      return updatedPoint
+    }
+  },
   methods: {
     addButton: function() {
-      console.log("add button");
       this.point.object.buttons.push(emptyButton());
+    },
+    save: function() {
+      let updatedPoint = this.count.points[this.point.index];
+      updatedPoint.name = this.pointName;
+      updatedPoint.buttons = this.buttons;
+      
+      db.put(updatedCount);
+      fetchAllDocs();
     }
   },
   template: `
@@ -47,7 +62,7 @@ Vue.component('edit-count', {
           </div>
           <button class="btn btn-secondary" @click="addButton">+</button>
         </div>
-        <button class="btn btn-primary" @click="$emit('save')">Sauvegarder</button>
+        <button class="btn btn-primary" @click="save; $emit('save')">Sauvegarder</button>
       </div>
     </div>
   `
