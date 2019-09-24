@@ -31,6 +31,9 @@ Vue.component('edit-count', {
     addButton: function() {
       this.updatedPoint.buttons.push(emptyButton());
     },
+    deleteButton: function(index) {
+      this.updatedPoint.buttons.splice(index,1);
+    },
     save: function() {
       const updatedCount = this.count;
       updatedCount.points[this.pointIndex] = this.updatedPoint;
@@ -51,7 +54,7 @@ Vue.component('edit-count', {
         </div>
         <div class="card-body p-0">
           <div class="row no-gutters">
-            <editable-card v-for="(button, index) in updatedPoint.buttons" :key="button.id" v-model="button.name"></editable-card>
+            <editable-card v-for="(button, index) in updatedPoint.buttons" :key="button.id" v-model="button.name" @delete="deleteButton(index)"></editable-card>
           </div>
           <button class="btn btn-secondary" @click="addButton">+</button>
         </div>
@@ -67,6 +70,7 @@ Vue.component('editable-card', {
     <div class="card m-1" style="width: 18rem;">
       <div class="card-body">
         <input :value="value" @input="$emit('input', $event.target.value)" type="text" class="form-control p-2" >
+        <button class="btn btn-secondary" @click="$emit('delete')">X</button>
       </div>
     </div>
   `
