@@ -21,31 +21,22 @@ Vue.component('button-counter', {
 })
 
 Vue.component('edit-count', {
-  props: ['count','point'],
+  props: ['count','pointIndex'],
   data: function() {
     return {
-      pointName: this.point.object.name,
-      buttons: this.point.object.buttons
-    }
-  },
-  computed: {
-    updatedCount: function() {
-      let updatedPoint = this.count.points[this.point.index];
-      updatedPoint.name = this.pointName;
-      updatedPoint.buttons = this.buttons;
-      return updatedPoint
+      point: this.count.points[this.pointIndex]
     }
   },
   methods: {
     addButton: function() {
-      this.point.object.buttons.push(emptyButton());
+      this.point.buttons.push(emptyButton());
     },
     save: function() {
-      let updatedPoint = this.count.points[this.point.index];
+      const updatedPoint = this.point;
       updatedPoint.name = this.pointName;
       updatedPoint.buttons = this.buttons;
-      
-      db.put(updatedCount);
+
+      db.put(updatedPoint);
       fetchAllDocs();
     }
   },
@@ -54,11 +45,11 @@ Vue.component('edit-count', {
       <div class="card mb-0">
         <div class="card-header">
           {{count.name}} -
-          <input type="text" class="form-control" v-model="pointName">
+          <input type="text" class="form-control" v-model="point.name">
         </div>
         <div class="card-body p-0">
           <div class="row no-gutters">
-            <editable-card v-for="(button, index) in buttons" :key="button.id" v-model="button.name"></editable-card>
+            <editable-card v-for="(button, index) in point.buttons" :key="button.id" v-model="button.name"></editable-card>
           </div>
           <button class="btn btn-secondary" @click="addButton">+</button>
         </div>
@@ -80,10 +71,15 @@ Vue.component('editable-card', {
 })
 
 Vue.component('counter', {
-  props: ['countName','point'],
+  props: ['count','pointIndex'],
+  data: function () {
+    return {
+      point: this.count.points[this.pointIndex]
+    }
+  },
   computed:{
     downloadPoint: function() {
-      const btnsArr = this.point.object.buttons;
+      const btnsArr = this.point.buttons;
       let dData = 'data:text/csv;sep=;charset=utf-8,%EF%BB%B \r\n';
       btnsArr.forEach(el=> {
         const csvRow = el.name + ';' + el.clicks.join(';') + '\r\n';
@@ -99,10 +95,12 @@ Vue.component('counter', {
   template: `
   <div class="col-md-8 col-lg-6">
     <div class="card mb-0">
-      <div class="card-header"> {{ countName }} - {{ point.object.name }} </div>
+      <div class="card-header">
+        {{ count.name }} - {{ point.name }}
+      </div>
       <div class="card-body p-0">
         <div class="row no-gutters">
-          <button-counter v-for="(button, index) in point.object.buttons" :key="button.id" :button="button" :done="point.done" @button-click="$emit('register-click', index)"></button-counter>
+          <button-counter v-for="(button, index) in point.buttons" :key="button.id" :button="button" :done="point.done" @button-click="$emit('register-click', index)"></button-counter>
         </div>
       </div>
       <button class="btn btn-primary d-md-none" @click="$emit('end-count')">Terminer</button>
@@ -162,11 +160,15 @@ Vue.component('counts-list', {
               {{ point.name }} - <button @click="$emit('edit-point', point, index)">edit</button>
               </li>
             </ul>
-            <add-to-list @save="addPoint(count)" v-model="newPointName"><h3 align="center">+</h3></add-to-list>
+            <add-to-list @save="addPoint(count)" v-model="newPointName">
+              <h3 align="center">+</h3>
+            </add-to-list>
           </div>
         </li>
       </ul>
-      <add-to-list @save="addCount" v-model="newCountName"><h2 align="center">+</h2></add-to-list>
+      <add-to-list @save="addCount" v-model="newCountName">
+        <h2 align="center">+</h2>
+      </add-to-list>
     </div>
   `
 })

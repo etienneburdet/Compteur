@@ -48,31 +48,33 @@
           <div class="row justify-content-md-center">
             <counter
               v-if="counting"
-              :count-name="selectedCount.name"
-              :point="selectedPoint"
+              :count="selectedCount"
+              :point-index="selectedPointIndex"
               @register-click="registerClick"
               @end-count="endCount"
             ></counter>
             <edit-count
               v-else-if="editingPoint"
               :count="selectedCount"
-              :point="selectedPoint"
+              :point-index="selectedPointIndex"
               @save="editingPoint = false; counting = true"
             ></edit-count>
             <counts-list
-              v-else :counts="counts"
+              v-else
+              :counts="counts"
               @select-point="onSelectPoint"
               @select-count="onSelectCount"
               @edit-point="onEditPoint"
             ></counts-list>
           </div>
+        </div>
+
       </main>
-  </div>
+    </div>
 
-  <script src="service-worker.js"></script>
-  <script src="app/components.js"></script>
-  <script src="app/index.js"></script>
-
+    <script src="service-worker.js" type="application/javascript"></script>
+    <script src="app/components.js" type="application/javascript"></script>
+    <script src="app/index.js" type="application/javascript"></script>
 
   </body>
 </html>

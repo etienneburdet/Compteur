@@ -66,10 +66,7 @@ const app = new Vue({
   data: {
     counts: {},
     selectedCount: {},
-    selectedPoint: {
-      object: {},
-      index: ''
-    },
+    selectedPointIndex: '',
     counting: false,
     editingPoint: false,
     isAuthenticated: false,
@@ -79,13 +76,11 @@ const app = new Vue({
   },
   methods: {
     onSelectPoint: function(point, index) {
-      this.selectedPoint.object = point;
-      this.selectedPoint.index = index;
+      this.selectedPointIndex = index;
       this.counting = true;
     },
     onEditPoint: function(point, index) {
-      this.selectedPoint.object = point;
-      this.selectedPoint.index = index;
+      this.selectedPointIndex = index;
       this.editingPoint = true;
     },
     onSelectCount: function(count) {
