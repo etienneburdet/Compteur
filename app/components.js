@@ -24,20 +24,22 @@ Vue.component('edit-count', {
   props: ['count','pointIndex'],
   data: function() {
     return {
-      point: this.count.points[this.pointIndex]
+      updatedPoint: this.count.points[this.pointIndex],
     }
   },
   methods: {
     addButton: function() {
-      this.point.buttons.push(emptyButton());
+      this.updatedPoint.buttons.push(emptyButton());
     },
     save: function() {
-      const updatedPoint = this.point;
-      updatedPoint.name = this.pointName;
-      updatedPoint.buttons = this.buttons;
+      const updatedCount = this.count;
+      updatedCount.points[this.pointIndex] = this.updatedPoint;
 
-      db.put(updatedPoint);
-      fetchAllDocs();
+      db.put(updatedCount)
+        .then(() => {
+          fetchAllDocs();
+          this.$emit('saved');
+        }).catch(err => console.log(err) );
     }
   },
   template: `
@@ -45,15 +47,15 @@ Vue.component('edit-count', {
       <div class="card mb-0">
         <div class="card-header">
           {{count.name}} -
-          <input type="text" class="form-control" v-model="point.name">
+          <input type="text" class="form-control" v-model="updatedPoint.name">
         </div>
         <div class="card-body p-0">
           <div class="row no-gutters">
-            <editable-card v-for="(button, index) in point.buttons" :key="button.id" v-model="button.name"></editable-card>
+            <editable-card v-for="(button, index) in updatedPoint.buttons" :key="button.id" v-model="button.name"></editable-card>
           </div>
           <button class="btn btn-secondary" @click="addButton">+</button>
         </div>
-        <button class="btn btn-primary" @click="save; $emit('save')">Sauvegarder</button>
+        <button class="btn btn-primary" @click="save">Sauvegarder</button>
       </div>
     </div>
   `

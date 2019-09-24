@@ -30,7 +30,7 @@
     <div id="app">
       <header>
           <nav class="navbar sticky-top shadow-sm pb-2 navbar-light bg-light">
-            <a class="navbar-brand mr-auto" href="index.html"> Counter </a>
+            <a class="navbar-brand mr-auto" href="/"> Counter </a>
             <button v-if="!isAuthenticated" type ="button" class="btn btn-primary" @click="login">Login/Sign up</button>
             <button v-if="isAuthenticated" type ="button" class="btn btn-primary" @click="logout">Logout</button>
             <img
@@ -57,7 +57,7 @@
               v-else-if="editingPoint"
               :count="selectedCount"
               :point-index="selectedPointIndex"
-              @save="editingPoint = false; counting = true"
+              @saved="editingPoint = false;"
             ></edit-count>
             <counts-list
               v-else
