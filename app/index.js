@@ -86,12 +86,6 @@ const app = new Vue({
     onSelectCount: function(count) {
       this.selectedCount = count;
     },
-    registerClick: function(buttonIndex) {
-      let pointIndex = this.selectedPoint.index;
-      let button = this.selectedCount.points[pointIndex].buttons[buttonIndex];
-
-      button.clicks.push(Date());
-    },
     endCount : function() {
       db.put(this.selectedCount);
       this.selectedCount = {};

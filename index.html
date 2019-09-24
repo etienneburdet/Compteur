@@ -50,8 +50,7 @@
               v-if="counting"
               :count="selectedCount"
               :point-index="selectedPointIndex"
-              @register-click="registerClick"
-              @end-count="endCount"
+              @end-count="counting = false"
             ></counter>
             <edit-count
               v-else-if="editingPoint"
