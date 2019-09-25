@@ -1,4 +1,59 @@
 
+const counter = Vue.component('counter', {
+  props: ['count','pointIndex'],
+  data: function () {
+    return {
+      point: this.count.points[this.pointIndex]
+    }
+  },
+  computed:{
+    downloadPoint: function() {
+      const btnsArr = this.point.buttons;
+      let dData = 'data:text/csv;sep=;charset=utf-8,%EF%BB%B \r\n';
+      btnsArr.forEach(el=> {
+        const csvRow = el.name + ';' + el.clicks.join(';') + '\r\n';
+        dData += csvRow;
+      });
+
+      const blob = new Blob([dData], {type: 'text/csv'});
+      const url = window.URL.createObjectURL(blob);
+
+      return url
+    }
+  },
+  methods: {
+    registerClick: function(index) {
+      this.point.buttons[index].clicks.push(Date());
+    },
+    endCount: function() {
+      const updatedCount = this.count;
+      updatedCount.points[this.pointIndex] = this.point;
+
+      db.put(updatedCount)
+        .then(() => {
+          fetchAllDocs();
+          router.push('/');
+        }).catch(err => console.log(err) );
+    }
+  },
+  template: `
+  <div class="col-md-8 col-lg-6">
+    <div class="card mb-0">
+      <div class="card-header">
+        {{ count.name }} - {{ point.name }}
+      </div>
+      <div class="card-body p-0">
+        <div class="row no-gutters">
+          <button-counter v-for="(button, index) in point.buttons" :key="button.id" :button="button" :done="point.done" @button-click="registerClick(index)">{{ index }}</button-counter>
+        </div>
+      </div>
+      <button class="btn btn-primary d-md-none" @click="endCount">Terminer</button>
+    </div>
+    <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
+  </div>
+  `
+})
+
 Vue.component('button-counter', {
   props: ['button'],
   computed: {
@@ -19,6 +74,8 @@ Vue.component('button-counter', {
     </div>
   `
 })
+
+
 
 const editCount = Vue.component('edit-count', {
   props: ['count','pointIndex'],
@@ -74,61 +131,6 @@ Vue.component('editable-card', {
         <button class="btn btn-secondary" @click="$emit('delete')">X</button>
       </div>
     </div>
-  `
-})
-
-const counter = Vue.component('counter', {
-  props: ['count','pointIndex'],
-  data: function () {
-    return {
-      point: this.count.points[this.pointIndex]
-    }
-  },
-  computed:{
-    downloadPoint: function() {
-      const btnsArr = this.point.buttons;
-      let dData = 'data:text/csv;sep=;charset=utf-8,%EF%BB%B \r\n';
-      btnsArr.forEach(el=> {
-        const csvRow = el.name + ';' + el.clicks.join(';') + '\r\n';
-        dData += csvRow;
-      });
-
-      const blob = new Blob([dData], {type: 'text/csv'});
-      const url = window.URL.createObjectURL(blob);
-
-      return url
-    }
-  },
-  methods: {
-    registerClick: function(index) {
-      point.buttons[index].push(Date());
-    },
-    endCount: function() {
-      const updatedCount = this.count;
-      updatedCount.points[this.pointIndex] = this.point;
-
-      db.put(updatedCount)
-        .then(() => {
-          fetchAllDocs();
-          router.push('/');
-        }).catch(err => console.log(err) );
-    }
-  },
-  template: `
-  <div class="col-md-8 col-lg-6">
-    <div class="card mb-0">
-      <div class="card-header">
-        {{ count.name }} - {{ point.name }}
-      </div>
-      <div class="card-body p-0">
-        <div class="row no-gutters">
-          <button-counter v-for="(button, index) in point.buttons" :key="button.id" :button="button" :done="point.done" @button-click="registerClick(index)"></button-counter>
-        </div>
-      </div>
-      <button class="btn btn-primary d-md-none" @click="endCount">Terminer</button>
-    </div>
-    <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
-  </div>
   `
 })
 
