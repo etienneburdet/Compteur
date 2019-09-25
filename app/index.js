@@ -72,7 +72,7 @@ const routes = [
   {
     path: '/counter/:count/:pointIndex',
     name: 'edit-count',
-    component: EditCount,
+    component: editCount,
     props: true
   }
 ]

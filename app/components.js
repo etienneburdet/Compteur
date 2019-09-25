@@ -20,7 +20,7 @@ Vue.component('button-counter', {
   `
 })
 
-const EditCount = Vue.component('edit-count', {
+const editCount = Vue.component('edit-count', {
   props: ['count','pointIndex'],
   data: function() {
     return {
