@@ -20,7 +20,7 @@ Vue.component('button-counter', {
   `
 })
 
-Vue.component('edit-count', {
+const EditCount = Vue.component('edit-count', {
   props: ['count','pointIndex'],
   data: function() {
     return {
@@ -63,6 +63,7 @@ Vue.component('edit-count', {
     </div>
   `
 })
+// EditCount;
 
 Vue.component('editable-card', {
   props: ['value'],
@@ -76,7 +77,7 @@ Vue.component('editable-card', {
   `
 })
 
-Vue.component('counter', {
+const counter = Vue.component('counter', {
   props: ['count','pointIndex'],
   data: function () {
     return {
@@ -117,8 +118,8 @@ Vue.component('counter', {
 })
 
 
-Vue.component('counts-list', {
-  props:['counts'],
+const countsList = Vue.component('counts-list', {
+  props: ['counts'],
   data: function() {
     return {
       newCountName: "Nouveau Comptage",
@@ -151,19 +152,35 @@ Vue.component('counts-list', {
       count.points.push(point);
       db.put(count).catch(function(err){console.log(err)}) ;
       fetchAllDocs();
+    },
+    createRoute: function(name,countIndex,pointIndex) {
+      const route = {
+        name: name,
+        params: {
+          count: this.counts[countIndex],
+          pointIndex: pointIndex
+        },
+      }
+
+      return route
     }
   },
   template: `
     <div class="col-md-8 col-lg-6">
       <ul class="list-group">
-        <li v-for="count in counts" @click="$emit('select-count', count)" class="list-group-item">
+        <li v-for="(count, countIndex) in counts" class="list-group-item">
           <div data-toggle="collapse" :data-target="'#' + count._id">
             {{ count.name }} - <button @click="deleteDoc(count)">suppr</button>
           </div>
           <div class="collapse" :id="count._id">
             <ul class="list-group list-group-flush">
-              <li v-for="(point, index) in count.points" @click="$emit('select-point', point, index)" class="list-group-item list-group-item-action">
-              {{ point.name }} - <button @click="$emit('edit-point', point, index)">edit</button>
+              <li v-for="(point, pointIndex) in count.points" class="list-group-item list-group-item-action">
+                <router-link :to="createRoute('counter',countIndex,pointIndex)">
+                  {{ point.name }}
+                </router-link>
+                <router-link :to="createRoute('edit-count',countIndex, pointIndex)">
+                 - <button>edit</button>
+               </router-link>
               </li>
             </ul>
             <add-to-list @save="addPoint(count)" v-model="newPointName">

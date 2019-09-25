@@ -61,7 +61,28 @@ function fetchAllDocs() {
   }).catch(console.log.bind(console));
 }
 
+const routes = [
+  { path: '/', component: countsList},
+  {
+    path: '/counter/:count/:pointIndex',
+    name: 'counter',
+    component: counter,
+    props: true
+  },
+  {
+    path: '/counter/:count/:pointIndex',
+    name: 'edit-count',
+    component: EditCount,
+    props: true
+  }
+]
+
+const router = new VueRouter({
+  routes
+})
+
 const app = new Vue({
+  router,
   el: '#app',
   data: {
     counts: {},

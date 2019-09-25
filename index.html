@@ -46,6 +46,7 @@
 
         <div class="container-fluid p-0">
           <div class="row justify-content-md-center">
+            <!--
             <counter
               v-if="counting"
               :count="selectedCount"
@@ -66,6 +67,10 @@
               @select-count="onSelectCount"
               @edit-point="onEditPoint"
             ></counts-list>
+          -->
+          <router-view
+            :counts="counts"
+          ></router-view>
           </div>
         </div>
 
