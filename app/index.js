@@ -86,46 +86,12 @@ const app = new Vue({
   el: '#app',
   data: {
     counts: {},
-    selectedCount: {},
-    selectedPointIndex: '',
-    counting: false,
-    editingPoint: false,
     isAuthenticated: false,
     token: null,
     user: null
 
   },
   methods: {
-    onSelectPoint: function(point, index) {
-      this.selectedPointIndex = index;
-      this.counting = true;
-    },
-    onEditPoint: function(point, index) {
-      this.selectedPointIndex = index;
-      this.editingPoint = true;
-    },
-    onSelectCount: function(count) {
-      this.selectedCount = count;
-    },
-    registerClick: function(buttonIndex) {
-      let pointIndex = this.selectedPoint.index;
-      let button = this.selectedCount.points[pointIndex].buttons[buttonIndex];
-
-      button.clicks.push(Date());
-    },
-    endCount : function() {
-      db.put(this.selectedCount);
-      this.selectedCount = {};
-      this.selectedPoint = {
-        object: {},
-        index: ''
-      };
-      this.counting = false;
-    },
-    deleteCount: function(count) {
-      db.remove(count);
-      fetchAllDocs();
-    },
     configureClient: async function() {
       auth0 = await createAuth0Client({
         domain: "dev-23dd-ysw.eu.auth0.com",

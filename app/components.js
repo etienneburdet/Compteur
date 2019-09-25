@@ -41,7 +41,7 @@ const editCount = Vue.component('edit-count', {
       db.put(updatedCount)
         .then(() => {
           fetchAllDocs();
-          this.$emit('saved');
+          router.push('/');
         }).catch(err => console.log(err) );
     }
   },
@@ -97,8 +97,23 @@ const counter = Vue.component('counter', {
       const url = window.URL.createObjectURL(blob);
 
       return url
-  }
-},
+    }
+  },
+  methods: {
+    registerClick: function(index) {
+      point.buttons[index].push(Date());
+    },
+    endCount: function() {
+      const updatedCount = this.count;
+      updatedCount.points[this.pointIndex] = this.point;
+
+      db.put(updatedCount)
+        .then(() => {
+          fetchAllDocs();
+          router.push('/');
+        }).catch(err => console.log(err) );
+    }
+  },
   template: `
   <div class="col-md-8 col-lg-6">
     <div class="card mb-0">
@@ -107,10 +122,10 @@ const counter = Vue.component('counter', {
       </div>
       <div class="card-body p-0">
         <div class="row no-gutters">
-          <button-counter v-for="(button, index) in point.buttons" :key="button.id" :button="button" :done="point.done" @button-click="$emit('register-click', index)"></button-counter>
+          <button-counter v-for="(button, index) in point.buttons" :key="button.id" :button="button" :done="point.done" @button-click="registerClick(index)"></button-counter>
         </div>
       </div>
-      <button class="btn btn-primary d-md-none" @click="$emit('end-count')">Terminer</button>
+      <button class="btn btn-primary d-md-none" @click="endCount">Terminer</button>
     </div>
     <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
   </div>
