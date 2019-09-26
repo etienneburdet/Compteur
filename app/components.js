@@ -84,40 +84,43 @@ Vue.component('button-counter', {
 
 
 const editCount = Vue.component('edit-count', {
-  props: ['count','pointIndex'],
+  props: ['countIndex','pointIndex'],
   data: function() {
     return {
-      updatedPoint: this.count.points[this.pointIndex],
+      count: {},
+      point: {}
     }
   },
   methods: {
     addButton: function() {
-      this.updatedPoint.buttons.push(emptyButton());
+      this.point.buttons.push(emptyButton());
     },
     deleteButton: function(index) {
-      this.updatedPoint.buttons.splice(index,1);
+      this.point.buttons.splice(index,1);
     },
     save: function() {
-      const updatedCount = this.count;
-      updatedCount.points[this.pointIndex] = this.updatedPoint;
-
-      db.put(updatedCount)
+      db.put(this.count)
         .then(() => {
           fetchAllDocs();
           router.push('/');
         }).catch(err => console.log(err) );
     }
   },
+  created: async function() {
+    store.counts = await store.fetchAllDocs();
+    this.count = store.counts[this.countIndex],
+    this.point = store.counts[this.countIndex].points[this.pointIndex]
+  },
   template: `
     <div class="col-md-8 col-lg-6">
       <div class="card mb-0">
         <div class="card-header">
           {{count.name}} -
-          <input type="text" class="form-control" v-model="updatedPoint.name">
+          <input type="text" class="form-control" v-model="point.name">
         </div>
         <div class="card-body p-0">
           <div class="row no-gutters">
-            <editable-card v-for="(button, index) in updatedPoint.buttons" :key="button.id" v-model="button.name" @delete="deleteButton(index)"></editable-card>
+            <editable-card v-for="(button, index) in point.buttons" :key="button.id" v-model="button.name" @delete="deleteButton(index)"></editable-card>
           </div>
           <button class="btn btn-secondary" @click="addButton">+</button>
         </div>
