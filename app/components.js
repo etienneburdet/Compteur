@@ -3,11 +3,11 @@ const counter = Vue.component('counter', {
   props: ['countIndex','pointIndex'],
   data: function () {
     return {
-      count: {},
-      point: {}
+      count: [],
+      point: []
     }
   },
-  computed:{
+  computed: {
     downloadPoint: function() {
       const btnsArr = this.point.buttons;
       let dData = 'data:text/csv;sep=;charset=utf-8,%EF%BB%B \r\n';
@@ -37,9 +37,10 @@ const counter = Vue.component('counter', {
         }).catch(err => console.log(err) );
     }
   },
-  created: function() {
-    this.count = store.counts[this.countIndex];
-    this.point = store.counts[this.countIndex].points[this.pointIndex];
+  created: async function() {
+    store.counts = await store.fetchAllDocs();
+    this.count = store.counts[this.countIndex],
+    this.point = store.counts[this.countIndex].points[this.pointIndex]
   },
   template: `
   <div class="col-md-8 col-lg-6">
