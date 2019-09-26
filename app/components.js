@@ -3,8 +3,8 @@ const counter = Vue.component('counter', {
   props: ['countIndex','pointIndex'],
   data: function () {
     return {
-      count: [],
-      point: []
+      count: {},
+      point: {}
     }
   },
   computed: {
@@ -27,12 +27,8 @@ const counter = Vue.component('counter', {
       this.point.buttons[index].clicks.push(Date());
     },
     endCount: function() {
-      const updatedCount = this.count;
-      updatedCount.points[this.pointIndex] = this.point;
-
-      db.put(updatedCount)
+      db.put(this.count)
         .then(() => {
-          fetchAllDocs();
           router.push('/');
         }).catch(err => console.log(err) );
     }
@@ -101,7 +97,6 @@ const editCount = Vue.component('edit-count', {
     save: function() {
       db.put(this.count)
         .then(() => {
-          fetchAllDocs();
           router.push('/');
         }).catch(err => console.log(err) );
     }
@@ -155,7 +150,7 @@ const countsList = Vue.component('counts-list', {
   methods: {
     deleteDoc: function(doc) {
       db.remove(doc);
-      fetchAllDocs();
+      store.fetchAllDocs();
     },
     addCount: function() {
         const count = {
@@ -163,11 +158,10 @@ const countsList = Vue.component('counts-list', {
           name: this.newCountName,
           points:  [emptyPoint()]
         }
-
+        this.counts.push(count);
         db.put(count);
-        fetchAllDocs();
       },
-    addPoint: function(count) {
+    addPoint: async function(count) {
       const point = {
         id: "point"+Date.now().toString(),
         name: this.newPointName,
@@ -177,7 +171,7 @@ const countsList = Vue.component('counts-list', {
 
       count.points.push(point);
       db.put(count).catch(function(err){console.log(err)}) ;
-      fetchAllDocs();
+      store.counts = await store.fetchAllDocs();
     },
     createRoute: function(name,countIndex,pointIndex) {
       const route = {

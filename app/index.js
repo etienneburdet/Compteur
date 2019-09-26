@@ -54,6 +54,7 @@ db.sync(cloudantDB,{
   console.log(err);
 });
 
+
 const store = {
   counts: [],
   dummyDocs() {
@@ -65,15 +66,7 @@ const store = {
       return docs;
       console.log("Data fetched");
     }).catch(console.log.bind(console));
-  }
-}
-
-
-function fetchAllDocs() {
-  return db.allDocs({include_docs: true}).then(function (res) {
-    const docs = res.rows.map(function (row) { return row.doc; });
-    return docs;
-  }).catch(console.log.bind(console));
+  },
 }
 
 const routes = [
@@ -100,7 +93,6 @@ const app = new Vue({
   router,
   el: '#app',
   data: {
-    counts: {},
     isAuthenticated: false,
     token: null,
     user: null
