@@ -1,9 +1,10 @@
 
 const counter = Vue.component('counter', {
-  props: ['count','pointIndex'],
+  props: ['countIndex','pointIndex'],
   data: function () {
     return {
-      point: this.count.points[this.pointIndex]
+      count: {},
+      point: {}
     }
   },
   computed:{
@@ -35,6 +36,10 @@ const counter = Vue.component('counter', {
           router.push('/');
         }).catch(err => console.log(err) );
     }
+  },
+  created: function() {
+    this.count = store.counts[this.countIndex];
+    this.point = store.counts[this.countIndex].points[this.pointIndex];
   },
   template: `
   <div class="col-md-8 col-lg-6">
@@ -136,9 +141,9 @@ Vue.component('editable-card', {
 
 
 const countsList = Vue.component('counts-list', {
-  props: ['counts'],
   data: function() {
     return {
+      counts: [],
       newCountName: "Nouveau Comptage",
       newPointName: "Nouveau Point"
     }
@@ -174,13 +179,17 @@ const countsList = Vue.component('counts-list', {
       const route = {
         name: name,
         params: {
-          count: this.counts[countIndex],
+          countIndex: countIndex,
           pointIndex: pointIndex
         },
       }
 
       return route
     }
+  },
+  created: async function() {
+    store.counts = await store.fetchAllDocs();
+    this.counts = store.counts;
   },
   template: `
     <div class="col-md-8 col-lg-6">

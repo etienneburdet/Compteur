@@ -54,23 +54,33 @@ db.sync(cloudantDB,{
   console.log(err);
 });
 
+const store = {
+  counts: {},
+  fetchAllDocs() {
+    return db.allDocs({include_docs: true}).then(function (res) {
+      const docs = res.rows.map(function (row) { return row.doc; });
+      return docs;
+    }).catch(console.log.bind(console));
+  }
+}
+
 function fetchAllDocs() {
   return db.allDocs({include_docs: true}).then(function (res) {
     const docs = res.rows.map(function (row) { return row.doc; });
-    app.counts = docs;
+    return docs;
   }).catch(console.log.bind(console));
 }
 
 const routes = [
   { path: '/', component: countsList},
   {
-    path: '/counter/:count/:pointIndex',
+    path: '/counter/:countIndex/:pointIndex',
     name: 'counter',
     component: counter,
-    props: true
+    props: true
   },
   {
-    path: '/counter/:count/:pointIndex',
+    path: '/editCount/:countIndex/:pointIndex',
     name: 'edit-count',
     component: editCount,
     props: true
