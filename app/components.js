@@ -60,7 +60,7 @@ const counter = Vue.component('counter', {
       </div>
       <button class="btn btn-primary d-md-none" @click="endCount">Terminer</button>
     </div>
-    <a class="btn btn-block btn-secondary" :href="downloadPoint" download="point.csv"><i class="fas fa-file-download fa-2x"></i></a>
+    <a class="btn btn-block btn-secondary d-none d-lg-block" :href="downloadPoint" download="point.csv"><i class="fas fa-file-download fa-2x"></i></a>
   </div>
   `
 })
