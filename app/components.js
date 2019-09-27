@@ -24,7 +24,16 @@ const counter = Vue.component('counter', {
   },
   methods: {
     registerClick: function(index) {
-      this.point.buttons[index].clicks.push(Date());
+      const clickTime = new Date();
+      const stringClickTime = clickTime.getDay().toString() + '-'
+                              + clickTime.getMonth().toString() + '-'
+                              + clickTime.getMonth().toString() + ' '
+                              + clickTime.getHours().toString() + ':'
+                              + clickTime.getMinutes().toString() + ':'
+                              + clickTime.getSeconds().toString();
+
+
+      this.point.buttons[index].clicks.push(stringClickTime);
     },
     endCount: function() {
       db.put(this.count)
