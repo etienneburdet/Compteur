@@ -51,7 +51,7 @@ const counter = Vue.component('counter', {
       </div>
       <button class="btn btn-primary d-md-none" @click="endCount">Terminer</button>
     </div>
-    <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
+    <a class="btn btn-block btn-secondary" :href="downloadPoint" download="point.csv"><i class="fas fa-file-download fa-2x"></i></a>
   </div>
   `
 })
@@ -196,7 +196,10 @@ const countsList = Vue.component('counts-list', {
       <ul class="list-group">
         <li v-for="(count, countIndex) in counts" class="list-group-item">
           <div data-toggle="collapse" :data-target="'#' + count._id">
-            {{ count.name }} - <button @click="deleteDoc(count)">suppr</button>
+            {{ count.name }}
+            <button @click="deleteDoc(count)" class="btn btn-light" style="float: right;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
           </div>
           <div class="collapse" :id="count._id">
             <ul class="list-group list-group-flush">
@@ -205,7 +208,9 @@ const countsList = Vue.component('counts-list', {
                   {{ point.name }}
                 </router-link>
                 <router-link :to="createRoute('edit-count',countIndex, pointIndex)">
-                 - <button>edit</button>
+                 <button @click="deleteDoc(count)" class="btn btn-light" style="float: right;">
+                  <i class="far fa-edit"></i>
+                </button>
                </router-link>
               </li>
             </ul>

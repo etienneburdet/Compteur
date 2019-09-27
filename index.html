@@ -31,7 +31,7 @@
       <header>
           <nav class="navbar sticky-top shadow-sm pb-2 navbar-light bg-light">
             <a class="navbar-brand mr-auto" href="/"> Counter </a>
-            <button v-if="!isAuthenticated" type ="button" class="btn btn-primary" @click="login">Login/Sign up</button>
+            <button v-if="!isAuthenticated" type ="button" class="btn btn-primary" @click="login" disabled>Login/Sign up</button>
             <button v-if="isAuthenticated" type ="button" class="btn btn-primary" @click="logout">Logout</button>
             <img
             v-if="isAuthenticated"
