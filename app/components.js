@@ -1,4 +1,61 @@
 
+const counter = Vue.component('counter', {
+  props: ['countIndex','pointIndex'],
+  data: function () {
+    return {
+      count: {},
+      point: {}
+    }
+  },
+  computed: {
+    downloadPoint: function() {
+      const btnsArr = this.point.buttons;
+      let dData = 'data:text/csv;sep=;charset=utf-8,%EF%BB%B \r\n';
+      btnsArr.forEach(el=> {
+        const csvRow = el.name + ';' + el.clicks.join(';') + '\r\n';
+        dData += csvRow;
+      });
+
+      const blob = new Blob([dData], {type: 'text/csv'});
+      const url = window.URL.createObjectURL(blob);
+
+      return url
+    }
+  },
+  methods: {
+    registerClick: function(index) {
+      this.point.buttons[index].clicks.push(Date());
+    },
+    endCount: function() {
+      db.put(this.count)
+        .then(() => {
+          router.push('/');
+        }).catch(err => console.log(err) );
+    }
+  },
+  created: async function() {
+    store.counts = await store.fetchAllDocs();
+    this.count = store.counts[this.countIndex],
+    this.point = store.counts[this.countIndex].points[this.pointIndex]
+  },
+  template: `
+  <div class="col-md-8 col-lg-6">
+    <div class="card mb-0">
+      <div class="card-header">
+        {{ count.name }} - {{ point.name }}
+      </div>
+      <div class="card-body p-0">
+        <div class="row no-gutters">
+          <button-counter v-for="(button, index) in point.buttons" :key="button.id" :button="button" :done="point.done" @button-click="registerClick(index)">{{ index }}</button-counter>
+        </div>
+      </div>
+      <button class="btn btn-primary d-md-none" @click="endCount">Terminer</button>
+    </div>
+    <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
+  </div>
+  `
+})
+
 Vue.component('button-counter', {
   props: ['button'],
   computed: {
@@ -20,101 +77,45 @@ Vue.component('button-counter', {
   `
 })
 
-Vue.component('counter', {
-  props: ['count','pointIndex'],
-  data: function () {
-    return {
-      point: this.count.points[this.pointIndex]
-    }
-  },
-  computed: {
-    downloadPoint: function() {
-      const btnsArr = this.point.buttons;
-      let dData = 'data:text/csv;sep=;charset=utf-8,%EF%BB%B \r\n';
-      btnsArr.forEach(el=> {
-        const csvRow = el.name + ';' + el.clicks.join(';') + '\r\n';
-        dData += csvRow;
-      });
 
-      const blob = new Blob([dData], {type: 'text/csv'});
-      const url = window.URL.createObjectURL(blob);
 
-      return url
-    }
-  },
-  methods: {
-    registerClick: function (index) {
-      this.point.buttons[index].clicks.push(Date())
-    },
-    endCount: function () {
-      const updatedCount = this.count;
-      updatedCount.points[this.pointIndex].buttons = this.point.buttons;
-
-      db.put(updatedCount)
-        .then( () => {
-          fetchAllDocs();
-          this.$emit('end-count')
-        }).catch( err => console.log(err));
-    }
-  },
-  template: `
-  <div class="col-md-8 col-lg-6">
-    <div class="card mb-0">
-      <div class="card-header">
-        {{ count.name }} - {{ point.name }}
-      </div>
-      <div class="card-body p-0">
-        <div class="row no-gutters">
-          <button-counter
-            v-for="(button, index) in point.buttons"
-            :key="button.id" :button="button"
-            :done="point.done"
-            @button-click="registerClick(index)"
-          ></button-counter>
-        </div>
-      </div>
-      <button class="btn btn-primary d-md-none" @click="endCount">Terminer</button>
-    </div>
-    <a class="btn btn-primary" :href="downloadPoint" download="point.csv">download</a>
-  </div>
-  `
-})
-
-Vue.component('edit-count', {
-  props: ['count','pointIndex'],
+const editCount = Vue.component('edit-count', {
+  props: ['countIndex','pointIndex'],
   data: function() {
     return {
-      updatedPoint: this.count.points[this.pointIndex],
+      count: {},
+      point: {}
     }
   },
   methods: {
     addButton: function() {
-      this.updatedPoint.buttons.push(emptyButton());
+      this.point.buttons.push(emptyButton());
     },
     deleteButton: function(index) {
-      this.updatedPoint.buttons.splice(index,1);
+      this.point.buttons.splice(index,1);
     },
     save: function() {
-      const updatedCount = this.count;
-      updatedCount.points[this.pointIndex] = this.updatedPoint;
-
-      db.put(updatedCount)
+      db.put(this.count)
         .then(() => {
-          fetchAllDocs();
-          this.$emit('saved');
+          router.push('/');
         }).catch(err => console.log(err) );
     }
+  },
+  created: async function() {
+    store.counts = await store.fetchAllDocs();
+    this.count = store.counts[this.countIndex],
+    this.point = store.counts[this.countIndex].points[this.pointIndex]
   },
   template: `
     <div class="col-md-8 col-lg-6">
       <div class="card mb-0">
         <div class="card-header">
           {{count.name}} -
-          <input type="text" class="form-control" v-model="updatedPoint.name">
+          <input type="text" class="form-control" v-model="point.name">
         </div>
         <div class="card-body p-0">
           <div class="row no-gutters">
-            <editable-card v-for="(button, index) in updatedPoint.buttons" :key="button.id" v-model="button.name" @delete="deleteButton(index)"></editable-card>
+            <editable-card v-for="(button, index) in point.buttons" :key="button.id" v-model="button.name" @delete="deleteButton(index)"></editable-card>
           </div>
           <button class="btn btn-secondary" @click="addButton">+</button>
         </div>
@@ -136,31 +137,34 @@ Vue.component('editable-card', {
   `
 })
 
-
-Vue.component('counts-list', {
-  props:['counts'],
+const countsList = Vue.component('counts-list', {
   data: function() {
     return {
+      counts: [],
       newCountName: "Nouveau Comptage",
       newPointName: "Nouveau Point"
     }
   },
   methods: {
-    deleteDoc: function(doc) {
-      db.remove(doc);
-      fetchAllDocs();
+    salut: function() {
+      monMessage = "Salut";
     },
-    addCount: function() {
+    deleteDoc: async function(doc) {
+      db.remove(doc);
+      store.counts = await store.fetchAllDocs();
+      this.counts = store.counts;
+    },
+    addCount: async function() {
         const count = {
           _id: "count"+Date.now().toString(),
           name: this.newCountName,
           points:  [emptyPoint()]
         }
-
         db.put(count);
-        fetchAllDocs();
+        store.counts = await store.fetchAllDocs();
+        this.counts = store.counts;
       },
-    addPoint: function(count) {
+    addPoint: async function(count) {
       const point = {
         id: "point"+Date.now().toString(),
         name: this.newPointName,
@@ -170,20 +174,39 @@ Vue.component('counts-list', {
 
       count.points.push(point);
       db.put(count).catch(function(err){console.log(err)}) ;
-      fetchAllDocs();
+      store.counts = await store.fetchAllDocs();
+    },
+    createRoute: function(name,countIndex,pointIndex) {
+      const route = {
+        name: name,
+        params: {
+          countIndex: countIndex,
+          pointIndex: pointIndex
+        },
+      }
+      return route
     }
   },
+ created: async function() {
+   store.counts = await store.fetchAllDocs();
+   this.counts = store.counts;
+ },
   template: `
     <div class="col-md-8 col-lg-6">
       <ul class="list-group">
-        <li v-for="count in counts" @click="$emit('select-count', count)" class="list-group-item">
+        <li v-for="(count, countIndex) in counts" class="list-group-item">
           <div data-toggle="collapse" :data-target="'#' + count._id">
             {{ count.name }} - <button @click="deleteDoc(count)">suppr</button>
           </div>
           <div class="collapse" :id="count._id">
             <ul class="list-group list-group-flush">
-              <li v-for="(point, index) in count.points" @click="$emit('select-point', point, index)" class="list-group-item list-group-item-action">
-              {{ point.name }} - <button @click="$emit('edit-point', point, index)">edit</button>
+              <li v-for="(point, pointIndex) in count.points" class="list-group-item list-group-item-action">
+                <router-link :to="createRoute('counter',countIndex,pointIndex)">
+                  {{ point.name }}
+                </router-link>
+                <router-link :to="createRoute('edit-count',countIndex, pointIndex)">
+                 - <button>edit</button>
+               </router-link>
               </li>
             </ul>
             <add-to-list @save="addPoint(count)" v-model="newPointName">

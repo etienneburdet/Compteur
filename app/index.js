@@ -12,7 +12,7 @@ const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
 // Put test data in db
-const dummyCountsList = [
+var dummyCountsList = [
   {
     _id: "test1",
     name: "St-Lazare",
@@ -41,6 +41,35 @@ const dummyCountsList = [
   }
 ]
 
+var dummyCountsLOL = [
+  {
+    _id: "test1",
+    name: "LOL",
+    points: [
+      {
+        name: "Escalier face Paul",
+        done: false,
+        buttons: [
+          {id: "3", name: "Flux 1", clicks: []},
+          {id: "4", name: "Flux 2", clicks: []},
+          {id: "5", name: "Flux 3", clicks: []}
+        ]
+      },
+      {
+        name: "Ascenceur A",
+        buttons: [
+          {id: "6", name: "Flux 1", clicks: []},
+          {id: "7", name: "Flux 1", clicks: []}
+        ]
+      },
+    ],
+  },
+  {
+    _id: "test2",
+    name: "LOL"
+  }
+]
+
 db.bulkDocs(dummyCountsList);
 // -----------------------
 
@@ -54,51 +83,48 @@ db.sync(cloudantDB,{
   console.log(err);
 });
 
-function fetchAllDocs() {
-  return db.allDocs({include_docs: true}).then(function (res) {
-    const docs = res.rows.map(function (row) { return row.doc; });
-    app.counts = docs;
-  }).catch(console.log.bind(console));
+
+const store = {
+  message: "Salut !",
+  counts: [],
+  fetchAllDocs() {
+    return db.allDocs({include_docs: true}).then(function (res) {
+      const docs = res.rows.map(function (row) { return row.doc; });
+      return docs;
+    }).catch(console.log.bind(console));
+  }
 }
 
+const routes = [
+  { path: '/', component: countsList},
+  {
+    path: '/counter/:countIndex/:pointIndex',
+    name: 'counter',
+    component: counter,
+    props: true
+  },
+  {
+    path: '/editCount/:countIndex/:pointIndex',
+    name: 'edit-count',
+    component: editCount,
+    props: true
+  }
+]
+
+const router = new VueRouter({
+  routes
+})
+
 const app = new Vue({
+  router,
   el: '#app',
   data: {
-    counts: {},
-    selectedCount: {},
-    selectedPointIndex: '',
-    counting: false,
-    editingPoint: false,
     isAuthenticated: false,
     token: null,
     user: null
 
   },
   methods: {
-    onSelectPoint: function(point, index) {
-      this.selectedPointIndex = index;
-      this.counting = true;
-    },
-    onEditPoint: function(point, index) {
-      this.selectedPointIndex = index;
-      this.editingPoint = true;
-    },
-    onSelectCount: function(count) {
-      this.selectedCount = count;
-    },
-    endCount : function() {
-      db.put(this.selectedCount);
-      this.selectedCount = {};
-      this.selectedPoint = {
-        object: {},
-        index: ''
-      };
-      this.counting = false;
-    },
-    deleteCount: function(count) {
-      db.remove(count);
-      fetchAllDocs();
-    },
     configureClient: async function() {
       auth0 = await createAuth0Client({
         domain: "dev-23dd-ysw.eu.auth0.com",
@@ -137,6 +163,5 @@ const app = new Vue({
   created: async function() {
     await this.configureClient();
     this.handleLogin();
-    fetchAllDocs();
   },
 });
