@@ -124,7 +124,6 @@ const editCount = Vue.component('edit-count', {
     </div>
   `
 })
-// EditCount;
 
 Vue.component('editable-card', {
   props: ['value'],
@@ -138,7 +137,6 @@ Vue.component('editable-card', {
   `
 })
 
-
 const countsList = Vue.component('counts-list', {
   data: function() {
     return {
@@ -148,18 +146,23 @@ const countsList = Vue.component('counts-list', {
     }
   },
   methods: {
-    deleteDoc: function(doc) {
-      db.remove(doc);
-      store.fetchAllDocs();
+    salut: function() {
+      monMessage = "Salut";
     },
-    addCount: function() {
+    deleteDoc: async function(doc) {
+      db.remove(doc);
+      store.counts = await store.fetchAllDocs();
+      this.counts = store.counts;
+    },
+    addCount: async function() {
         const count = {
           _id: "count"+Date.now().toString(),
           name: this.newCountName,
           points:  [emptyPoint()]
         }
-        this.counts.push(count);
         db.put(count);
+        store.counts = await store.fetchAllDocs();
+        this.counts = store.counts;
       },
     addPoint: async function(count) {
       const point = {
@@ -181,14 +184,13 @@ const countsList = Vue.component('counts-list', {
           pointIndex: pointIndex
         },
       }
-
       return route
     }
   },
-  created: async function() {
-    store.counts = await store.fetchAllDocs();
-    this.counts = store.counts;
-  },
+ created: async function() {
+   store.counts = await store.fetchAllDocs();
+   this.counts = store.counts;
+ },
   template: `
     <div class="col-md-8 col-lg-6">
       <ul class="list-group">

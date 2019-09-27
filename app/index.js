@@ -12,7 +12,7 @@ const db = new PouchDB('comptages');
 const cloudantDB = new PouchDB('https://ventsionersamoressessime:dd7fbcb5886d6f34f49a22f55bf587a030fa61a2@9cc819eb-31e4-4d0b-b5a2-b47068260a3c-bluemix.cloudantnosqldb.appdomain.cloud/counts');
 
 // Put test data in db
-const dummyCountsList = [
+var dummyCountsList = [
   {
     _id: "test1",
     name: "St-Lazare",
@@ -41,6 +41,35 @@ const dummyCountsList = [
   }
 ]
 
+var dummyCountsLOL = [
+  {
+    _id: "test1",
+    name: "LOL",
+    points: [
+      {
+        name: "Escalier face Paul",
+        done: false,
+        buttons: [
+          {id: "3", name: "Flux 1", clicks: []},
+          {id: "4", name: "Flux 2", clicks: []},
+          {id: "5", name: "Flux 3", clicks: []}
+        ]
+      },
+      {
+        name: "Ascenceur A",
+        buttons: [
+          {id: "6", name: "Flux 1", clicks: []},
+          {id: "7", name: "Flux 1", clicks: []}
+        ]
+      },
+    ],
+  },
+  {
+    _id: "test2",
+    name: "LOL"
+  }
+]
+
 db.bulkDocs(dummyCountsList);
 // -----------------------
 
@@ -56,17 +85,14 @@ db.sync(cloudantDB,{
 
 
 const store = {
+  message: "Salut !",
   counts: [],
-  dummyDocs() {
-    this.counts = dummyCountsList;
-  },
   fetchAllDocs() {
     return db.allDocs({include_docs: true}).then(function (res) {
       const docs = res.rows.map(function (row) { return row.doc; });
       return docs;
-      console.log("Data fetched");
     }).catch(console.log.bind(console));
-  },
+  }
 }
 
 const routes = [
